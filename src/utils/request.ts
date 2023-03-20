@@ -36,7 +36,7 @@ export default class XtxRequestManager {
                 // 清空用户信息
                 this._userStore.$reset()
                 // 跳转登录页
-                router.push('/login')
+                router.push('login')
             }
         })
     }
@@ -47,7 +47,7 @@ export default class XtxRequestManager {
         return XtxRequestManager._singletonInstance
     }
     // 给外部使用的请求函数
-    request(config: AxiosRequestConfig): Promise<any> {
-        return this._instance.request(config)
+    request<T = any, D = any>(config: AxiosRequestConfig<D>): Promise<any> {
+        return this._instance.request<T, D>(config)
     }
 }
