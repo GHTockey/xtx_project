@@ -10,11 +10,12 @@ const router = createRouter({
       component: () => import('../components/XtxLayout.vue'),
       children: [
         // 在children中path留空表示父组件一旦加载同时加载此组件
-        {
-          path: '',
-          name: 'home', // 主页
-          component: () => import('@/views/home/HomePage.vue')
-        }
+        // 主页
+        { path: '', name: 'home', component: () => import('@/views/home/HomePage.vue') },
+        // 一级分类
+        { path: 'category/:id', name: "topCategory", component: () => import('@/views/category/TopCategoryPage.vue') },
+        // 二级分类
+        { path: 'category/sub/:id/:sid', name: "subCategory", component: () => import('@/views/category/SubCategoryPage.vue') },
       ]
     },
     {
@@ -22,13 +23,6 @@ const router = createRouter({
       name: 'login',
       component: () => import('@/views/login/index.vue')
     },
-    {
-      path: '/category/:id',
-      component: () => import('@/views/category/TopCategoryPage.vue'),
-      // children: [
-      //   { path: 'sub' }
-      // ]
-    }
   ]
 })
 

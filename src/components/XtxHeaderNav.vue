@@ -8,10 +8,10 @@
             <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
             <div class="layer">
                 <ul>
-                    <li v-for="son in item.children" :key="son.id">
-                        <RouterLink :to="`/category/sub/${item.id}/${son.id}`">
-                            <img :src="son.picture" alt="" />
-                            <p>{{ son.name }}</p>
+                    <li v-for="sub in item.children" :key="sub.id">
+                        <RouterLink :to="`/category/sub/${item.id}/${sub.id}`">
+                            <img :src="sub.picture" alt="" />
+                            <p>{{ sub.name }}</p>
                         </RouterLink>
                     </li>
                 </ul>
