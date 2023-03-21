@@ -1,9 +1,11 @@
 <template>
-  <router-view />
+  <RouterView />
 </template>
 
 
 <script setup lang="ts">
+import { RouterView, type RouterLink } from 'vue-router';
+
 </script>
 
 

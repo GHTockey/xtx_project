@@ -21,6 +21,13 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/index.vue')
+    },
+    {
+      path: '/category/:id',
+      component: () => import('@/views/category/TopCategoryPage.vue'),
+      // children: [
+      //   { path: 'sub' }
+      // ]
     }
   ]
 })
