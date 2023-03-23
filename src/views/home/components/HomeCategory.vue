@@ -1,8 +1,13 @@
 <!-- src/views/home/components/HomeCategory.vue -->
 <script setup lang="ts">
 import useCategoryStore from "@/stores/categoryStore";
+import useHomeStore from "@/stores/homeStore";
 import { storeToRefs } from "pinia";
 const { categories } = storeToRefs(useCategoryStore());
+const { brands } = storeToRefs(useHomeStore());
+// 解构方法
+const { getBrands } = useHomeStore();
+getBrands(8);
 </script>
 
 <template>
@@ -26,6 +31,30 @@ const { categories } = storeToRefs(useCategoryStore());
                         </div>
                      </RouterLink>
                   </li>
+               </ul>
+            </div>
+         </li>
+         <!-- 品牌 -->
+         <li>
+            <RouterLink to="/">品牌</RouterLink>
+            <RouterLink to="/">推荐品牌</RouterLink>
+            <div class="layer">
+               <h4>分类品牌推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+               <ul>
+                  <!-- <template> -->
+                     <li class="brand" v-for="item in brands.result" :key="item.id">
+                        <RouterLink to="/">
+                           <img :src="item.picture" :alt="item.name" />
+                           <div class="info">
+                              <p class="place">
+                                 <i class="iconfont icon-dingwei"></i>{{ item.place }}
+                              </p>
+                              <p class="name ellipsis">{{ item.name }}</p>
+                              <p class="desc ellipsis-2">{{ item.desc }}</p>
+                           </div>
+                        </RouterLink>
+                     </li>
+                  <!-- </template> -->
                </ul>
             </div>
          </li>

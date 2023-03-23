@@ -61,22 +61,3 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
         },
     }
 });
-
-export let sss = defineStore('category_store', () => {
-    const categories = {
-        headerNav: [],
-        status: "idle",
-    }
-
-    
-    const getCategories = async () => {
-        categories.status = "loading";
-        try {
-            let res = await CategoryAPI.getCategories();
-            (categories.headerNav as Category[]) = res.result;
-            categories.status = "success";
-        } catch (error) {
-            categories.status = "error";
-        }
-    }
-});

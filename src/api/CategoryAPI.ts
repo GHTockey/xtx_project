@@ -8,5 +8,5 @@ export default class CategoryAPI {
         return XtxRequestManager.createInstance.request<Response<Category[]>>({
             url: '/home/category/head'
         })
-    }
+    };
 }
