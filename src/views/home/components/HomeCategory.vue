@@ -1,5 +1,8 @@
 <!-- src/views/home/components/HomeCategory.vue -->
 <script setup lang="ts">
+import XtxSkeleton from "@/components/XtxSkeleton.vue";
+import { CATEGORIES } from "@/contants";
+
 import useCategoryStore from "@/stores/categoryStore";
 import useHomeStore from "@/stores/homeStore";
 import { storeToRefs } from "pinia";
@@ -8,32 +11,49 @@ const { brands } = storeToRefs(useHomeStore());
 // 解构方法
 const { getBrands } = useHomeStore();
 getBrands(8);
+
 </script>
 
 <template>
    <div class="home-category">
       <ul class="menu">
-         <li v-for="item in categories.homeCategory" :key="item.id">
-            <RouterLink to="/">{{ item.name }}</RouterLink>
-            <RouterLink to="/" v-for="sub in item.children" :key="sub.id">{{ sub.name }}</RouterLink>
-            <div class="layer">
-               <h4>
-                  分类商品推荐 <small>根据您的购买或浏览记录推荐</small>
-               </h4>
-               <ul>
-                  <li v-for="goods in item.goods" :key="goods.id">
-                     <RouterLink to="/">
-                        <img :src="goods.picture" alt="goods_img" />
-                        <div class="info">
-                           <p class="name ellipsis-2">{{ goods.name }}</p>
-                           <p class="desc ellipsis">{{ goods.desc }}</p>
-                           <p class="price"><i>¥</i>{{ goods.price }}</p>
-                        </div>
-                     </RouterLink>
-                  </li>
-               </ul>
-            </div>
-         </li>
+         <template v-if="categories.status === 'loading'">
+            <!-- 遍历本地一级分类 -->
+            <li v-for="category in CATEGORIES" :key="category.id">
+               <!-- 渲染本地一级分类 -->
+               <a>{{ category.name }}</a>
+               <!-- 渲染二级分类骨架屏 -->
+               <XtxSkeleton animated="fade" width="60px" height="18px" bg="rgba(255,255,255,0.2)"
+                  style="margin-right: 5px">
+               </XtxSkeleton>
+               <XtxSkeleton animated="fade" width="60px" height="18px" bg="rgba(255,255,255,0.2)"></XtxSkeleton>
+            </li>
+         </template>
+
+         <template v-else>
+            <li v-for="item in categories.homeCategory" :key="item.id">
+               <RouterLink to="/">{{ item.name }}</RouterLink>
+               <RouterLink to="/" v-for="sub in item.children" :key="sub.id">{{ sub.name }}</RouterLink>
+               <div class="layer">
+                  <h4>
+                     分类商品推荐 <small>根据您的购买或浏览记录推荐</small>
+                  </h4>
+                  <ul>
+                     <li v-for="goods in item.goods" :key="goods.id">
+                        <RouterLink to="/">
+                           <img :src="goods.picture" alt="goods_img" />
+                           <div class="info">
+                              <p class="name ellipsis-2">{{ goods.name }}</p>
+                              <p class="desc ellipsis">{{ goods.desc }}</p>
+                              <p class="price"><i>¥</i>{{ goods.price }}</p>
+                           </div>
+                        </RouterLink>
+                     </li>
+                  </ul>
+               </div>
+            </li>
+         </template>
+
          <!-- 品牌 -->
          <li>
             <RouterLink to="/">品牌</RouterLink>
@@ -42,18 +62,18 @@ getBrands(8);
                <h4>分类品牌推荐 <small>根据您的购买或浏览记录推荐</small></h4>
                <ul>
                   <!-- <template> -->
-                     <li class="brand" v-for="item in brands.result" :key="item.id">
-                        <RouterLink to="/">
-                           <img :src="item.picture" :alt="item.name" />
-                           <div class="info">
-                              <p class="place">
-                                 <i class="iconfont icon-dingwei"></i>{{ item.place }}
-                              </p>
-                              <p class="name ellipsis">{{ item.name }}</p>
-                              <p class="desc ellipsis-2">{{ item.desc }}</p>
-                           </div>
-                        </RouterLink>
-                     </li>
+                  <li class="brand" v-for="item in brands.result" :key="item.id">
+                     <RouterLink to="/">
+                        <img :src="item.picture" :alt="item.name" />
+                        <div class="info">
+                           <p class="place">
+                              <i class="iconfont icon-dingwei"></i>{{ item.place }}
+                           </p>
+                           <p class="name ellipsis">{{ item.name }}</p>
+                           <p class="desc ellipsis-2">{{ item.desc }}</p>
+                        </div>
+                     </RouterLink>
+                  </li>
                   <!-- </template> -->
                </ul>
             </div>
