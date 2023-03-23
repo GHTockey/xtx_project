@@ -4,9 +4,11 @@
         <li class="home">
             <RouterLink to="/">首页</RouterLink>
         </li>
-        <li v-for="item in categories.headerNav" v-if="categories.headerNav.length">
+        <li v-for="item in categories.headerNav" v-if="categories.headerNav.length"
+            @mouseenter="displayToggle(item.id, true)" @mouseleave="displayToggle(item.id, false)"
+            @click="displayToggle(item.id, false)">
             <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
-            <div class="layer">
+            <div class="layer" :class="{ open: item.isOpen }">
                 <ul>
                     <li v-for="sub in item.children" :key="sub.id">
                         <RouterLink :to="`/category/sub/${item.id}/${sub.id}`">
@@ -17,6 +19,7 @@
                 </ul>
             </div>
         </li>
+        <!--  -->
         <li v-else v-for="item in CATEGORIES">
             <a href="#">
                 <p>{{ item.name }}</p>
@@ -33,7 +36,7 @@ import { CATEGORIES } from "@/contants";
 
 const categoryStore = useCategoryStore();
 const { categories } = storeToRefs(categoryStore);
-const { getCategories } = categoryStore;
+const { getCategories, displayToggle } = categoryStore;
 
 getCategories();
 </script>
@@ -65,10 +68,10 @@ getCategories();
                 border-bottom: 1px solid @xtxColor;
             }
 
-            >.layer {
-                height: 132px;
-                opacity: 1;
-            }
+            // >.layer {
+            //     height: 132px;
+            //     opacity: 1;
+            // }
         }
     }
 
@@ -110,6 +113,11 @@ getCategories();
                     }
                 }
             }
+        }
+
+        &.open {
+            height: 132px;
+            opacity: 1;
         }
     }
 }

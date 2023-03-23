@@ -5,7 +5,7 @@ import type { Response } from "@/types/Res";
 
 export default class CategoryAPI {
     static getCategories() {
-        return XtxRequestManager.createInstance().request<Response<Category[]>>({
+        return XtxRequestManager.createInstance.request<Response<Category[]>>({
             url: '/home/category/head'
         })
     }

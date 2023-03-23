@@ -42,7 +42,7 @@ export default class XtxRequestManager {
     }
 
     // 创建单例
-    static createInstance() {
+    static get createInstance() {
         if (!XtxRequestManager._singletonInstance) this._singletonInstance = new XtxRequestManager()
         return XtxRequestManager._singletonInstance
     }
