@@ -1,6 +1,6 @@
 import XtxRequestManager from "@/utils/request";
 
-import type { Category } from "@/types/Category";
+import type { Category } from "@/types/Home/Category";
 import type { Response } from "@/types/Res";
 
 export default class CategoryAPI {

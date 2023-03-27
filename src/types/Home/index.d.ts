@@ -1,3 +1,4 @@
+// 左侧品牌数据类型
 export interface Brand {
     id: string;
     name: string;
@@ -7,4 +8,12 @@ export interface Brand {
     type: null;
     desc: string;
     place: string;
+}
+
+// 轮播图数据类型
+export interface Banner {
+    id: string;
+    imgUrl: string;
+    hrefUrl: string;
+    type: string;
 }

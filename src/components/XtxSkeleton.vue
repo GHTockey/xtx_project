@@ -61,4 +61,5 @@ withDefaults(
 
 .fade {
     animation: fade 1s linear infinite alternate;
-}</style>
+}
+</style>

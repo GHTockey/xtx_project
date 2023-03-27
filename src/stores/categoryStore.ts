@@ -3,7 +3,7 @@ import CategoryAPI from "@/api/CategoryAPI";
 import { ref } from "vue";
 
 import type { Status } from '@/types/Status';
-import type { Category } from "@/types/Category";
+import type { Category } from "@/types/Home/Category";
 
 // 定义 Store 对象中状态的类型
 type State = {

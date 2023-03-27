@@ -1,12 +1,14 @@
 <template>
     <div class="container">
         <HomeCategory />
+        <HomeBanner />
     </div>
 </template>
 
 
 <script setup lang="ts">
-import HomeCategory from "./components/HomeCategory.vue";
+import HomeCategory from "./components/HomeCategory.vue"; // 左侧分类组件
+import HomeBanner from "./components/HomeBanner.vue"; // home 轮播图组件(其中复用了公共轮播图组件)
 </script>
 
 

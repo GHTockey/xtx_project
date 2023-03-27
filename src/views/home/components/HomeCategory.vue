@@ -1,17 +1,18 @@
 <!-- src/views/home/components/HomeCategory.vue -->
 <script setup lang="ts">
-import XtxSkeleton from "@/components/XtxSkeleton.vue";
-import { CATEGORIES } from "@/contants";
+import XtxSkeleton from "@/components/XtxSkeleton.vue"; // 骨架屏组件
+import { CATEGORIES } from "@/contants"; // 常量导航栏死数据
 
 import useCategoryStore from "@/stores/categoryStore";
 import useHomeStore from "@/stores/homeStore";
 import { storeToRefs } from "pinia";
+
+// state
 const { categories } = storeToRefs(useCategoryStore());
 const { brands } = storeToRefs(useHomeStore());
-// 解构方法
+// actions
 const { getBrands } = useHomeStore();
 getBrands(8);
-
 </script>
 
 <template>
@@ -24,9 +25,8 @@ getBrands(8);
                <a>{{ category.name }}</a>
                <!-- 渲染二级分类骨架屏 -->
                <XtxSkeleton animated="fade" width="60px" height="18px" bg="rgba(255,255,255,0.2)"
-                  style="margin-right: 5px">
-               </XtxSkeleton>
-               <XtxSkeleton animated="fade" width="60px" height="18px" bg="rgba(255,255,255,0.2)"></XtxSkeleton>
+                  style="margin-right: 5px" />
+               <XtxSkeleton animated="fade" width="60px" height="18px" bg="rgba(255,255,255,0.2)" />
             </li>
          </template>
 

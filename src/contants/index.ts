@@ -1,4 +1,4 @@
-import type { Category } from "@/types/Category";
+import type { Category } from "@/types/Home/Category";
 
 // Pick泛型方法：接收类型返回指定类型中的某些键的新类型
 export const CATEGORIES: Pick<Category, 'id' | 'name'>[] = [
