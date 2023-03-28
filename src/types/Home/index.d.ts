@@ -17,3 +17,8 @@ export interface Banner {
     hrefUrl: string;
     type: string;
 }
+
+// // 新鲜好物数据类型
+// export interface Fresh {
+
+// }

@@ -1,4 +1,5 @@
 import type { Brand, Banner } from "@/types/Home";
+import type { Goods } from "@/types/Home/Category";
 import type { Response } from "@/types/Res";
 import XtxRequestManager from "@/utils/request";
 
@@ -15,6 +16,13 @@ export default class HomeAPI {
         return XtxRequestManager.createInstance.request<Response<Banner[]>>({
             url: '/home/banner',
             params: { distributionSite }
+        })
+    };
+    // 获取新鲜好物数据
+    static getFresh(limit?: number) {
+        return XtxRequestManager.createInstance.request<Response<Goods[]>>({
+            url: '/home/new',
+            params: { limit }
         })
     }
 }

@@ -3,6 +3,7 @@ import HomeAPI from "@/api/HomeAPI";
 
 import type { Brand, Banner } from "@/types/Home";
 import type { Status } from "@/types/Status";
+import type { Goods } from "@/types/Home/Category";
 
 interface State {
     brands: {// 左侧品牌
@@ -13,12 +14,17 @@ interface State {
         result: Banner[]
         status: Status
     },
+    freshGoods: {// 新鲜好物
+        result: Goods[],
+        status: Status
+    }
 }
 type Getters = {}
 
 interface Actions {
     getBrands: (limit: number) => void
     getBanners: (distributionSite: 1 | 2) => void
+    getFreshGoods: (limit?: number) => void
 }
 
 export default defineStore<"home_store", State, Getters, Actions>('home_store', {
@@ -29,6 +35,10 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 status: 'idle'
             },
             banner: {
+                result: [],
+                status: 'idle'
+            },
+            freshGoods: {
                 result: [],
                 status: 'idle'
             }
@@ -47,7 +57,7 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
             }
         },
         // 获取轮播图数据
-        async getBanners(distributionSite=1) {
+        async getBanners(distributionSite = 1) {
             this.banner.status = 'loading';
             try {
                 let res = await HomeAPI.getBanners(distributionSite);
@@ -55,6 +65,17 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 this.banner.status = 'success';
             } catch (error) {
                 this.banner.status = 'error'
+            }
+        },
+        // 获取新鲜好物数据
+        async getFreshGoods(limit = 4) {
+            this.freshGoods.status = 'loading';
+            try {
+                let res = await HomeAPI.getFresh(limit)
+                this.freshGoods.result = res.result
+                this.freshGoods.status = 'success'
+            } catch (error) {
+                this.freshGoods.status = 'error'
             }
         },
     },

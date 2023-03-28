@@ -14,8 +14,15 @@ getBanners(1);
 </script>
 
 <template>
+    <!-- 主页轮播图 -->
     <div class="home-banner">
-        <XtxCarousel :list="banner.result" :autoPlay="false" :duration="500" v-if="banner.status === 'success'" />
+        <XtxCarousel :list="banner.result" :autoPlay="true" :duration="2000" v-if="banner.status === 'success'">
+            <template v-for="item, i in banner.result" v-slot:[`default${i}`]>
+                <RouterLink :to="item.hrefUrl">
+                    <img :src="item.imgUrl" alt="banner" />
+                </RouterLink>
+            </template>
+        </XtxCarousel>
     </div>
 </template>
   

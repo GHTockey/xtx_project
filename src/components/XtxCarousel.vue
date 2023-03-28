@@ -1,11 +1,11 @@
 <!-- src/components/XtxCarousel.vue -->
 <template>
+   <!-- 轮播图组件 -->
    <div class="xtx-carousel" @mouseenter="stopTimer" @mouseleave="beginTimer">
       <ul class="carousel-body">
          <li class="carousel-item" :class="{ 'fade': currentIndex == i }" v-for="item, i in list" :key="item.id">
-            <RouterLink :to="item.hrefUrl">
-               <img :src="item.imgUrl" alt="banner" />
-            </RouterLink>
+            <!-- 遍历插槽 -->
+            <slot :name="`default${i}`"></slot>
          </li>
       </ul>
       <a href="javascript:" class="carousel-btn prev" @click="toggle(-1)"><i class="iconfont icon-angle-left"></i></a>
@@ -33,7 +33,7 @@ const props = withDefaults(
 });
 
 // 当前显示轮播图的下标
-let currentIndex = ref<number>(3);
+let currentIndex = ref<number>(0);
 // 定时器
 let timer: number | undefined = undefined;
 
@@ -50,22 +50,22 @@ function autoPlay() {
    }, props.duration)
 };
 // 按钮切换
-function toggle(n: 1 | -1) {
-   if (currentIndex.value >= props.list.length - 1 && n === 1) {
+function toggle(i: 1 | -1) {
+   if (currentIndex.value >= props.list.length - 1 && i === 1) {
       currentIndex.value = 0
       return
-   } else if (currentIndex.value <= 0 && n === -1) {
+   } else if (currentIndex.value <= 0 && i === -1) {
       currentIndex.value = props.list.length - 1
       return
    };
-   currentIndex.value += n;
+   currentIndex.value += i;
 };
 // 暂停轮播
 function stopTimer() {
    clearInterval(timer)
 };
 // 开始轮播
-function beginTimer(){
+function beginTimer() {
    if (props.autoPlay) {
       autoPlay()
    }
