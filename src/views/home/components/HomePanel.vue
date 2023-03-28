@@ -6,6 +6,7 @@ withDefaults(defineProps<{ title?: string; subTitle?: string }>(), {
 </script>
 
 <template>
+    <!-- 面板组件 -->
     <div class="home-panel">
         <div class="container">
             <div class="head">

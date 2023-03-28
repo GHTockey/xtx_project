@@ -18,7 +18,10 @@ export interface Banner {
     type: string;
 }
 
-// // 新鲜好物数据类型
-// export interface Fresh {
-
-// }
+// 人气推荐数据类型
+export interface HotRecommends {
+    id: string
+    picture: string
+    title: string
+    alt: string
+}

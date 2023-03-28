@@ -7,7 +7,7 @@
         </template>
         <!-- 内容 -->
         <template v-slot:default>
-            <div class="relative">
+            <div class="relative" ref="target">
                 <ul class="goods-list">
                     <li v-for="item in freshGoods.result" :key="item.id">
                         <RouterLink to="/">
@@ -16,6 +16,15 @@
                             <p class="price">&yen;{{ item.price }}</p>
                         </RouterLink>
                     </li>
+                    <Transition name="fade">
+                        <HomeSkeleton v-if="freshGoods.status === 'loading'" />
+                    </Transition>
+                <!-- <li v-for="(item, index) in 4" :key="index">
+                        <XtxSkeleton width="100%" height="80%" />
+                        <p class="name ellipsis">
+                            <XtxSkeleton height="30px" />
+                        </p>
+                </li> -->
                 </ul>
             </div>
         </template>
@@ -27,18 +36,24 @@ import HomePanel from "./HomePanel.vue"; // 公共面板组件
 import XtxMore from "@/components/XtxMore.vue"; // 查看更多组件
 import useHomeStore from "@/stores/homeStore";
 import { storeToRefs } from "pinia";
+import useLazyLoad from "@/logics/useLazy"; // 懒加载程序
+import HomeSkeleton from "./HomeSkeleton.vue"; // 骨架屏
 export default {
     // 注册组件
-    components: { HomePanel, XtxMore },
+    components: { HomePanel, XtxMore, HomeSkeleton },
     setup() {
         const homeStore = useHomeStore();
         const { freshGoods } = storeToRefs(homeStore);
         const { getFreshGoods } = homeStore;
-        getFreshGoods(4)
+        // getFreshGoods(4)
+
+        // 懒加载
+        const target = useLazyLoad(getFreshGoods)
+
 
         return {
             // return 属性以在模板中使用
-            freshGoods
+            freshGoods, target
         }
     }
 }

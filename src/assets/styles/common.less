@@ -268,3 +268,14 @@ ul {
     border: none;
   }
 }
+
+.fade {
+  &-leave {
+    &-active {
+      transition: opacity 0.5s;
+    }
+    &-to {
+      opacity: 0;
+    }
+  }
+}

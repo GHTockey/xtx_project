@@ -1,51 +1,55 @@
 import { defineStore } from "pinia";
 import HomeAPI from "@/api/HomeAPI";
 
-import type { Brand, Banner } from "@/types/Home";
+import type { Brand, Banner, HotRecommends } from "@/types/Home";
 import type { Status } from "@/types/Status";
 import type { Goods } from "@/types/Home/Category";
 
 interface State {
-    brands: {// 左侧品牌
+    // 左侧品牌
+    brands: {
         result: Brand[]
         status: Status
     },
-    banner: {// 轮播图
+    // 轮播图
+    banner: {
         result: Banner[]
         status: Status
     },
-    freshGoods: {// 新鲜好物
-        result: Goods[],
+    // 新鲜好物
+    freshGoods: {
+        result: Goods[]
+        status: Status
+    },
+    // 人气推荐
+    hotRecommends: {
+        result: HotRecommends[]
         status: Status
     }
 }
 type Getters = {}
 
 interface Actions {
-    getBrands: (limit: number) => void
-    getBanners: (distributionSite: 1 | 2) => void
-    getFreshGoods: (limit?: number) => void
+    /**获取品牌数据 */
+    getBrands: (limit: number) => Promise<void>
+    /**获取轮播图数据 */
+    getBanners: (distributionSite: 1 | 2) => Promise<void>
+    /**获取新鲜好物数据 */
+    getFreshGoods: (limit?: number) => Promise<void>
+    /**获取人气推荐数据 */
+    getHotRecommends: () => Promise<void>
 }
 
 export default defineStore<"home_store", State, Getters, Actions>('home_store', {
     state() {
         return {
-            brands: {
-                result: [],
-                status: 'idle'
-            },
-            banner: {
-                result: [],
-                status: 'idle'
-            },
-            freshGoods: {
-                result: [],
-                status: 'idle'
-            }
+            brands: { result: [], status: 'idle' },
+            banner: { result: [], status: 'idle' },
+            freshGoods: { result: [], status: 'idle' },
+            hotRecommends: { result: [], status: 'idle' }
         }
     },
     actions: {
-        // 获取品牌数据
         async getBrands(limit = 10) {
             this.brands.status = 'loading';
             try {
@@ -53,10 +57,9 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 this.brands.result = res.result;
                 this.brands.status = 'success';
             } catch (error) {
-                this.brands.status = 'error'
+                this.brands.status = 'error';
             }
         },
-        // 获取轮播图数据
         async getBanners(distributionSite = 1) {
             this.banner.status = 'loading';
             try {
@@ -64,18 +67,27 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 this.banner.result = res.result;
                 this.banner.status = 'success';
             } catch (error) {
-                this.banner.status = 'error'
+                this.banner.status = 'error';
             }
         },
-        // 获取新鲜好物数据
         async getFreshGoods(limit = 4) {
             this.freshGoods.status = 'loading';
             try {
-                let res = await HomeAPI.getFresh(limit)
-                this.freshGoods.result = res.result
-                this.freshGoods.status = 'success'
+                let res = await HomeAPI.getFresh(limit);
+                this.freshGoods.result = res.result;
+                this.freshGoods.status = 'success';
             } catch (error) {
-                this.freshGoods.status = 'error'
+                this.freshGoods.status = 'error';
+            }
+        },
+        async getHotRecommends() {
+            this.hotRecommends.status = 'loading';
+            try {
+                let res = await HomeAPI.getHotRecommends();
+                this.hotRecommends.result = res.result;
+                this.hotRecommends.status = 'success';
+            } catch (error) {
+                this.hotRecommends.status = 'error';
             }
         },
     },
