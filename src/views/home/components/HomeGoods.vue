@@ -1,30 +1,26 @@
 <!-- src/views/home/components/HomeGoods.vue -->
 <template>
-    <div class="home-product">
-        <HomePanel title="生鲜" v-for="i in 4" :key="i">
+    <div class="home-product" ref="target">
+        <HomePanel :title="item.name" v-for="item, i in goods.result" :key="item.id">
             <template v-slot:right>
                 <div class="sub">
-                    <RouterLink to="/">海鲜</RouterLink>
-                    <RouterLink to="/">水果</RouterLink>
-                    <RouterLink to="/">蔬菜</RouterLink>
-                    <RouterLink to="/">水产</RouterLink>
-                    <RouterLink to="/">禽肉</RouterLink>
+                    <RouterLink :to="`/category/sub/${item.id}/${sub.id}`" v-for="sub in item.children">{{ sub.name }}
+                    </RouterLink>
                 </div>
                 <XtxMore />
             </template>
             <template v-slot:default>
                 <div class="box">
                     <RouterLink class="cover" to="/">
-                        <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/fresh_goods_cover.jpg"
-                            alt="" />
+                        <img :src="item.picture" alt="" />
                         <strong class="label">
-                            <span>生鲜馆</span>
-                            <span>全场3件7折</span>
+                            <span>{{ item.name }}馆</span>
+                            <span>{{ item.saleInfo }}</span>
                         </strong>
                     </RouterLink>
                     <ul class="goods-list">
-                        <li v-for="i in 8" :key="i">
-                            <GoodsItem />
+                        <li v-for="goods in item.goods" :key="goods.id">
+                            <GoodsItem :goods="goods" />
                         </li>
                     </ul>
                 </div>
@@ -37,6 +33,16 @@
 import XtxMore from "@/components/XtxMore.vue";
 import HomePanel from "./HomePanel.vue";
 import GoodsItem from "./GoodsItem.vue";
+
+import useHomeStore from "@/stores/homeStore";
+import { storeToRefs } from "pinia";
+import useLazyLoad from "@/logics/useLazy";
+
+const homeStore = useHomeStore();
+const { goods } = storeToRefs(homeStore);
+const { getGoodsHandler } = homeStore;
+// getGoodsHandler()
+const target = useLazyLoad(getGoodsHandler);
 </script>
   
 <style scoped lang="less">

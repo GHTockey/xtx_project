@@ -3,7 +3,7 @@ import HomeAPI from "@/api/HomeAPI";
 
 import type { Brand, Banner, HotRecommends } from "@/types/Home";
 import type { Status } from "@/types/Status";
-import type { Goods } from "@/types/Home/Category";
+import type { Goods, Category } from "@/types/Home/Category";
 
 interface State {
     // 左侧品牌
@@ -25,6 +25,11 @@ interface State {
     hotRecommends: {
         result: HotRecommends[]
         status: Status
+    },
+    // 产品区块
+    goods: {
+        result: Category[]
+        status: Status
     }
 }
 type Getters = {}
@@ -38,6 +43,8 @@ interface Actions {
     getFreshGoods: (limit?: number) => Promise<void>
     /**获取人气推荐数据 */
     getHotRecommends: () => Promise<void>
+    /**获取产品区块数据程序 */
+    getGoodsHandler: () => Promise<void>
 }
 
 export default defineStore<"home_store", State, Getters, Actions>('home_store', {
@@ -46,7 +53,8 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
             brands: { result: [], status: 'idle' },
             banner: { result: [], status: 'idle' },
             freshGoods: { result: [], status: 'idle' },
-            hotRecommends: { result: [], status: 'idle' }
+            hotRecommends: { result: [], status: 'idle' },
+            goods: { result: [], status: 'idle' }
         }
     },
     actions: {
@@ -88,6 +96,16 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 this.hotRecommends.status = 'success';
             } catch (error) {
                 this.hotRecommends.status = 'error';
+            }
+        },
+        async getGoodsHandler() {
+            this.goods.status = 'loading';
+            try {
+                let res = await HomeAPI.getGoods();
+                this.goods.result = res.result;
+                this.goods.status = 'success';
+            } catch (error) {
+                this.goods.status = 'error';
             }
         },
     },

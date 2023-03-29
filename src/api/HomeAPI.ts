@@ -1,5 +1,5 @@
 import type { Brand, Banner, HotRecommends } from "@/types/Home";
-import type { Goods } from "@/types/Home/Category";
+import type { Goods, Category } from "@/types/Home/Category";
 import type { Response } from "@/types/Res";
 import XtxRequestManager from "@/utils/request";
 
@@ -29,6 +29,12 @@ export default class HomeAPI {
     static getHotRecommends() {
         return XtxRequestManager.createInstance.request<Response<HotRecommends[]>>({
             url: '/home/hot'
+        })
+    };
+    /**获取产品区块API */
+    static getGoods() {
+        return XtxRequestManager.createInstance.request<Response<Category[]>>({
+            url: '/home/goods'
         })
     }
 }
