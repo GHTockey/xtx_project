@@ -2,7 +2,7 @@
 <template>
     <div class="goods-item">
         <RouterLink to="/" class="image">
-            <img :src="goods.picture" />
+            <img v-intersection-observer="[onIntersectionObserver, { threshold: 0 }]" :data-src="goods.picture" />
         </RouterLink>
         <p class="name ellipsis-2">{{ goods.name }}</p>
         <p class="desc ellipsis">{{ goods.desc }}</p>
@@ -18,8 +18,19 @@
 
 <script lang="ts" setup>
 import type { Goods } from '@/types/Home/Category';
-
-defineProps<{ goods: Goods }>()
+import { vIntersectionObserver } from "@vueuse/components";
+defineProps<{ goods: Goods }>();
+const onIntersectionObserver: IntersectionObserverCallback = ([
+    { isIntersecting, target },
+]) => {
+    // 如果元素进入可视区
+    if (isIntersecting) {
+        // 设置 target 类型
+        let imgElm = target as HTMLImageElement;
+        // 加载图片
+        imgElm.src = imgElm.dataset.src!;
+    }
+};
 </script>
   
 <style scoped lang="less">

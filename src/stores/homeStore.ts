@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import HomeAPI from "@/api/HomeAPI";
 
-import type { Brand, Banner, HotRecommends } from "@/types/Home";
+import type { Brand, Banner, HotRecommends, Special } from "@/types/Home";
 import type { Status } from "@/types/Status";
 import type { Goods, Category } from "@/types/Home/Category";
 
@@ -30,6 +30,11 @@ interface State {
     goods: {
         result: Category[]
         status: Status
+    },
+    // 最新专题
+    special: {
+        result: Special[]
+        status: Status
     }
 }
 type Getters = {}
@@ -45,6 +50,8 @@ interface Actions {
     getHotRecommends: () => Promise<void>
     /**获取产品区块数据程序 */
     getGoodsHandler: () => Promise<void>
+    /**获取最新专题数据程序 */
+    getSpecialHandler: () => Promise<void>
 }
 
 export default defineStore<"home_store", State, Getters, Actions>('home_store', {
@@ -54,7 +61,8 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
             banner: { result: [], status: 'idle' },
             freshGoods: { result: [], status: 'idle' },
             hotRecommends: { result: [], status: 'idle' },
-            goods: { result: [], status: 'idle' }
+            goods: { result: [], status: 'idle' },
+            special: { result: [], status: 'idle' }
         }
     },
     actions: {
@@ -106,6 +114,16 @@ export default defineStore<"home_store", State, Getters, Actions>('home_store', 
                 this.goods.status = 'success';
             } catch (error) {
                 this.goods.status = 'error';
+            }
+        },
+        async getSpecialHandler() {
+            this.special.status = 'loading';
+            try {
+                let res = await HomeAPI.getSpecial();
+                this.special.result = res.result;
+                this.special.status = 'success';
+            } catch (error) {
+                this.special.status = 'error';
             }
         },
     },

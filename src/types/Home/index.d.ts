@@ -25,3 +25,21 @@ export interface HotRecommends {
     title: string
     alt: string
 }
+
+// 最新专题数据类型
+export interface Special {
+    creator: string;
+    isDelete: number;
+    createTime: string;
+    updateTime: string;
+    id: string;
+    classificationId: string;
+    title: string;
+    summary: string;
+    lowestPrice: number;
+    cover: string;
+    detailsUrl: string;
+    collectNum: number;
+    viewNum: number;
+    replyNum: number;
+}
