@@ -5,6 +5,7 @@
         <FreshGoods />
         <HotRecommends />
         <HotBrands />
+        <HomeGoods />
     </div>
 </template>
 
@@ -15,6 +16,7 @@ import HomeBanner from "./components/HomeBanner.vue"; // home 轮播图组件(�
 import FreshGoods from "./components/FreshGoods.vue"; // 新鲜好物组件
 import HotBrands from "./components/HotBrands.vue"; // 热门品牌
 import HotRecommends from "./components/HotRecommends.vue"; // 人气推荐
+import HomeGoods from "./components/HomeGoods.vue";
 </script>
 
 

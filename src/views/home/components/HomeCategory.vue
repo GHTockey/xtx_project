@@ -12,7 +12,7 @@ const { categories } = storeToRefs(useCategoryStore());
 const { brands } = storeToRefs(useHomeStore());
 // actions
 const { getBrands } = useHomeStore();
-getBrands(8);
+getBrands(10);
 </script>
 
 <template>
@@ -62,7 +62,8 @@ getBrands(8);
                <h4>分类品牌推荐 <small>根据您的购买或浏览记录推荐</small></h4>
                <ul>
                   <!-- <template> -->
-                  <li class="brand" v-for="item in brands.result" :key="item.id">
+                  <li class="brand" v-for="item in (brands.result.length > 9 ? brands.result.slice(0, 9) : brands.result)"
+                     :key="item.id">
                      <RouterLink to="/">
                         <img :src="item.picture" :alt="item.name" />
                         <div class="info">

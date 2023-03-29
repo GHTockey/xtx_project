@@ -2,15 +2,17 @@
 <template>
    <HomePanel title="热门品牌" subTitle="国际经典 品质保证">
       <template v-slot:right>
-         <a href="javascript:" class="iconfont icon-angle-left prev"></a>
-         <a href="javascript:" class="iconfont icon-angle-right next"></a>
+         <a href="javascript:" class="iconfont icon-angle-left prev" @click="target = 0"
+            :class="{ disabled: target === 0 }"></a>
+         <a href="javascript:" class="iconfont icon-angle-right next" @click="target = -1240"
+            :class="{ disabled: target === -1240 }"></a>
       </template>
       <template v-slot:default>
          <div class="box">
-            <ul class="list">
-               <li v-for="i in 10" :key="i">
+            <ul :style="{ transform: `translateX(${target}px)` }" class="list">
+               <li v-for="item in brands.result" :key="item.id">
                   <RouterLink to="/">
-                     <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/brand_goods_1.jpg" alt="" />
+                     <img :src="item.picture" alt="" />
                   </RouterLink>
                </li>
             </ul>
@@ -21,6 +23,15 @@
 
 <script lang="ts" setup>
 import HomePanel from "./HomePanel.vue";
+import useHomeStore from "@/stores/homeStore";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
+
+const homeStore = useHomeStore();
+const { brands } = storeToRefs(homeStore);
+const target = ref<0 | -1240>(0);
+// let a = brands.value.result.slice(0,9);
+// console.log(a);
 </script>
 
 <style scoped lang="less">
@@ -76,4 +87,5 @@ import HomePanel from "./HomePanel.vue";
          }
       }
    }
-}</style>
+}
+</style>
