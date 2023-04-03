@@ -8,11 +8,13 @@
                 </RouterLink>
             </template>
         </XtxCarousel>
+        <AllSubCategories />
     </div>
 </template>
 
 <script setup lang="ts">
 import TopCategoryBread from "./components/TopCategoryBread.vue";
+import AllSubCategories from "./components/AllSubCategories.vue";
 import XtxCarousel from "@/components/XtxCarousel.vue";
 import useHomeStore from "@/stores/homeStore";
 import { storeToRefs } from 'pinia';
