@@ -2,7 +2,9 @@
     <div>
         <XtxBread>
             <XtxBreadItem path="/">主页</XtxBreadItem>
-            <XtxBreadItem>{{ currentItem?.name }}</XtxBreadItem>
+            <Transition name="fade-right" mode="out-in">
+                <XtxBreadItem :key="currentItem?.id">{{ currentItem?.name }}</XtxBreadItem>
+            </Transition>
         </XtxBread>
     </div>
 </template>
@@ -22,6 +24,4 @@ const route = useRoute();
 let currentItem = computed(() => currentTop(route.params.id as string));
 </script>
 
-<style lang="">
-    
-</style>
+<style></style>

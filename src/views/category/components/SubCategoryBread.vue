@@ -2,8 +2,13 @@
     <div>
         <XtxBread>
             <XtxBreadItem path="/">首页</XtxBreadItem>
-            <XtxBreadItem :path="`/category/${route.params.id}`">{{ currentItem.topCategory?.name }}</XtxBreadItem>
-            <XtxBreadItem>{{ currentItem.subCategory?.name }}</XtxBreadItem>
+            <Transition name="fade-right" mode="out-in">
+                <XtxBreadItem :key="currentItem?.topCategory?.id" :path="`/category/${route.params.id}`">{{
+                    currentItem.topCategory?.name }}</XtxBreadItem>
+            </Transition>
+            <Transition name="fade-right" mode="out-in">
+                <XtxBreadItem :key="currentItem.subCategory?.id">{{ currentItem.subCategory?.name }}</XtxBreadItem>
+            </Transition>
         </XtxBread>
     </div>
 </template>

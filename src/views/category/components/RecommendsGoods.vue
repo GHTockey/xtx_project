@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+// import { computed } from "vue";
 import GoodsItem from "./GoodsItem.vue";
 import XtxMore from "@/components/XtxMore.vue";
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
