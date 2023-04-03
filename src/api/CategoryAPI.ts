@@ -9,4 +9,10 @@ export default class CategoryAPI {
             url: '/home/category/head'
         })
     };
+    static getTopCategoryById(id: string) {
+        return XtxRequestManager.createInstance.request<Response<Category>>({
+            url: '/category',
+            params: { id }
+        })
+    }
 }

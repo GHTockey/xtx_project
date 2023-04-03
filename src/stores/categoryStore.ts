@@ -47,6 +47,13 @@ type State = {
         // 主页分类(轮播图板块)
         homeCategory: Category[]
     };
+    // 一级分类具体信息
+    topCategories: {
+        result: {
+            [key: string]: Category
+        }
+        status: Status
+    }
 };
 
 // 定义 Getters 对象的类型
@@ -57,8 +64,12 @@ type Getters = {
 
 // 定义 Actions 对象的类型
 type Actions = {
+    /**获取分类数据 */
     getCategories(): Promise<void>;
+    /**导航显示切换 */
     displayToggle(id: string, target: boolean): void;
+    /**根据一级分类 id 获取分类信息 */
+    getTopCategoryById(id: string): Promise<void>;
 };
 
 export default defineStore<string, State, Getters, Actions>('category_store', {
@@ -68,6 +79,10 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
                 headerNav: [],
                 status: "idle",
                 homeCategory: []
+            },
+            topCategories: {
+                result: {},
+                status: 'idle'
             }
         }
     },
@@ -84,7 +99,6 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
         },
     },
     actions: {
-        // 获取分类数据
         async getCategories() {
             this.categories.status = "loading";
             try {
@@ -100,11 +114,20 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
                 this.categories.status = "error";
             }
         },
-        // 导航显示切换
         displayToggle(id, target) {
             // console.log(target);
             let cateEl = this.categories.headerNav.find(el => el.id === id);
             cateEl && (cateEl.isOpen = target)
+        },
+        async getTopCategoryById(id) {
+            this.topCategories.status = 'loading';
+            try {
+                let res = await CategoryAPI.getTopCategoryById(id);
+                this.topCategories.result[res.result.id] = res.result;
+                this.topCategories.status = 'success';
+            } catch (error) {
+                this.topCategories.status = 'error';
+            }
         },
     }
 });
