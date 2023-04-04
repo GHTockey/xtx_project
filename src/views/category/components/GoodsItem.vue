@@ -11,12 +11,12 @@
 <script lang="ts" setup>
 import type { Goods } from '@/types/Home/Category';
 
-let p = defineProps<{
+defineProps<{
     // 使用类型工具将参数转为可无属性
     goods: Partial<Goods>
+    // goods: Required<Goods>
 }>()
 
-console.log(p,1222);
 </script>
   
 <style scoped lang="less">

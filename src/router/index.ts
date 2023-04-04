@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior: () => ({ top: 0 }), // 路由一旦发生变化就回到顶部
   routes: [
     {
       path: '/',
