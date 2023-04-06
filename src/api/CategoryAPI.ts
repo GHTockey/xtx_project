@@ -14,5 +14,12 @@ export default class CategoryAPI {
             url: '/category',
             params: { id }
         })
+    };
+    /**根据二级分类ID获取该分类下的商品的筛选条件API */
+    static getSubCategoryFilters(id: string) {
+        return XtxRequestManager.createInstance.request<Response<Category>>({
+            url: "/category/sub/filter",
+            params: { id },
+        });
     }
 }

@@ -5,38 +5,6 @@ import { reactive, ref } from "vue";
 import type { Status } from '@/types/Status';
 import type { Category } from "@/types/Home/Category";
 
-// interface Categories {
-//     headerNav: (Category & { isOpen: boolean })[], // 导航分类
-//     status: Status; // 请求状态
-//     homeCategory: Category[] // 主页分类(轮播图板块)
-// };
-// // 箭头函数写法：
-// export default defineStore('category_store', () => {
-//     const categories = reactive<Categories>({
-//         headerNav: [],
-//         status: 'idle',
-//         homeCategory: []
-//     });
-
-//     /**获取分类数据*/
-//     async function getCategories(): Promise<void> {
-//         categories.status = 'loading'
-//         try {
-//             let res = await CategoryAPI.getCategories()
-//             categories.headerNav = res.result.map(el => ({ ...el, isOpen: false }))
-//             categories.homeCategory = res.result.map(el => ({ ...el, children: el.children?.slice(0, 2) }))
-//             categories.status = 'success'
-//         } catch (error) {
-//             categories.status = 'error'
-//         }
-//     };
-//     /**导航显示切换 */
-//     function displayToggle(id: string, target: boolean): void {
-//         let cateEl = categories.headerNav.find(el => el.id === id);
-//         cateEl && (cateEl.isOpen = target)
-//     };
-// })
-
 // 定义 Store 对象中状态的类型
 type State = {
     categories: {
@@ -53,7 +21,14 @@ type State = {
             [key: string]: Category
         }
         status: Status
-    }
+    };
+    // 二级分类筛选
+    subCategoryFilters: {
+        result: {
+            [id: string]: Category;
+        };
+        status: Status;
+    };
 };
 
 // 定义 Getters 对象的类型
@@ -70,6 +45,8 @@ type Actions = {
     displayToggle(id: string, target: boolean): void;
     /**根据一级分类 id 获取分类信息 */
     getTopCategoryById(id: string): Promise<void>;
+    /**根据二级分类 id 获取该分类下的商品的筛选条件 */
+    getSubCategoryFilters(id: string): Promise<void>;
 };
 
 export default defineStore<string, State, Getters, Actions>('category_store', {
@@ -81,6 +58,10 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
                 homeCategory: []
             },
             topCategories: {
+                result: {},
+                status: 'idle'
+            },
+            subCategoryFilters: {
                 result: {},
                 status: 'idle'
             }
@@ -127,6 +108,16 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
                 this.topCategories.status = 'success';
             } catch (error) {
                 this.topCategories.status = 'error';
+            }
+        },
+        async getSubCategoryFilters(id) {
+            this.subCategoryFilters.status = 'loading'
+            try {
+                let res = await CategoryAPI.getSubCategoryFilters(id)
+                this.subCategoryFilters.result[res.result.id] = res.result
+                this.subCategoryFilters.status = 'success'
+            } catch (error) {
+                this.subCategoryFilters.status = 'error'
             }
         },
     }
