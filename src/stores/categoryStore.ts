@@ -22,7 +22,7 @@ type State = {
         }
         status: Status
     };
-    // 二级分类筛选
+    // 二级分类筛选数据
     subCategoryFilters: {
         result: {
             [id: string]: Category;
@@ -45,7 +45,7 @@ type Actions = {
     displayToggle(id: string, target: boolean): void;
     /**根据一级分类 id 获取分类信息 */
     getTopCategoryById(id: string): Promise<void>;
-    /**根据二级分类 id 获取该分类下的商品的筛选条件 */
+    /**根据二级分类 id 获取该分类下的商品的筛选条件数据 */
     getSubCategoryFilters(id: string): Promise<void>;
 };
 

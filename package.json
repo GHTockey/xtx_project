@@ -13,6 +13,7 @@
     "@vueuse/components": "^8.7.5",
     "@vueuse/core": "^9.13.0",
     "axios": "^0.27.2",
+    "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.32",
     "pinia-plugin-persistedstate": "^1.6.1",
@@ -20,6 +21,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
     "@types/node": "^18.14.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
