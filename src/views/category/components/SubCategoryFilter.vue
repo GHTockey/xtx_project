@@ -26,6 +26,7 @@
             </div>
         </div>
     </div>
+    <!-- 骨架屏 -->
     <div class="sub-filter" v-else-if="subCategoryFilters.status === 'loading'">
         <XtxSkeleton class="item" width="800px" height="25px" />
         <XtxSkeleton class="item" width="800px" height="25px" />
@@ -40,7 +41,7 @@ import XtxSkeleton from "@/components/XtxSkeleton.vue";
 import useCategoryStore from "@/stores/categoryStore";
 import type { GoodsRequestParams } from "@/types/Home/Category";
 import { storeToRefs } from "pinia";
-import { reactive, ref, onUpdated } from "vue";
+import { ref, onUpdated } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import omitBy from "lodash/omitBy";
 import transform from "lodash/transform";
@@ -90,9 +91,9 @@ function selectedFiltersChanged(filters: Partial<SelectedFilters>) {
     console.log(r);
 };
 
-onUpdated(() => {
-    console.log('页面更新');
-});
+// onUpdated(() => {
+//     console.log('页面更新');
+// });
 </script>
   
 <style scoped lang="less">
