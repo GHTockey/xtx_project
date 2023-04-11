@@ -4,13 +4,13 @@
         <!-- <i class="iconfont icon-checked" v-if="isChecked"></i> -->
         <!-- <i class="iconfont icon-unchecked" v-else></i> -->
         <i :class="`iconfont ${isChecked ? 'icon-checked' : 'icon-unchecked'}`"></i>
-        <span></span>
+        <span><slot></slot></span>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useVModel } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 // modelValue: v-model
 // checked 不使用双向数据绑定时, 状态的默认值
@@ -30,6 +30,16 @@ const toggle = () => {
     if (!isVmodel) emit("onChange", isChecked.value)
 };
 
+//由于父组件状态发生变化 不会重新执行 setup 函数
+// 所以此处开发者需要自定监听
+watch(
+  () => props.checked,
+  () => {
+    if (!isVmodel) {
+      isChecked.value = props.checked;
+    }
+  }
+);
 </script>
   
 <style scoped lang="less">

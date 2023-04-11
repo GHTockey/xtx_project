@@ -46,3 +46,12 @@ export interface GoodsRequestParams {
     lowPrice: number; // 最低价
     highPrice: number; // 最高价
 }
+
+/** 商品列表 */
+export interface Pagination<T> {
+    page: number;
+    pages: number;
+    pageSize: number;
+    counts: number;
+    items: T[];
+}

@@ -3,7 +3,7 @@ import CategoryAPI from "@/api/CategoryAPI";
 import { reactive, ref } from "vue";
 
 import type { Status } from '@/types/Status';
-import type { Category } from "@/types/Home/Category";
+import type { Category, Pagination, Goods, GoodsRequestParams } from "@/types/Home/Category";
 
 // 定义 Store 对象中状态的类型
 type State = {
@@ -11,9 +11,9 @@ type State = {
         // 导航分类
         headerNav: (Category & { isOpen: boolean })[],
         // 请求状态
-        status: Status;
+        status: Status,
         // 主页分类(轮播图板块)
-        homeCategory: Category[]
+        homeCategory: Category[],
     };
     // 一级分类具体信息
     topCategories: {
@@ -28,6 +28,11 @@ type State = {
             [id: string]: Category;
         };
         status: Status;
+    };
+    // 二级分类商品
+    categoryGoods: {
+        status: Status;
+        result: Pagination<Goods>;
     };
 };
 
@@ -47,6 +52,11 @@ type Actions = {
     getTopCategoryById(id: string): Promise<void>;
     /**根据二级分类 id 获取该分类下的商品的筛选条件数据 */
     getSubCategoryFilters(id: string): Promise<void>;
+    /** 获取二级分类商品 */
+    getCategoryGoods(
+        categoryId: GoodsRequestParams["categoryId"],
+        reqParams?: Partial<Omit<GoodsRequestParams, "categoryId">>
+    ): Promise<void>;
 };
 
 export default defineStore<string, State, Getters, Actions>('category_store', {
@@ -64,7 +74,17 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
             subCategoryFilters: {
                 result: {},
                 status: 'idle'
-            }
+            },
+            categoryGoods: {
+                result: {
+                    page: 0,
+                    pages: 0,
+                    pageSize: 0,
+                    counts: 0,
+                    items: [],
+                },
+                status: 'idle',
+            },
         }
     },
     getters: {
@@ -118,6 +138,25 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
                 this.subCategoryFilters.status = 'success'
             } catch (error) {
                 this.subCategoryFilters.status = 'error'
+            }
+        },
+        async getCategoryGoods(categoryId, reqParams) {
+            // 更新加载状态
+            this.categoryGoods.status = "loading";
+            // 捕获错误
+            try {
+                // 发送请求获取二级分类商品数据
+                let response = await CategoryAPI.getCategoryGoods(
+                    categoryId,
+                    reqParams
+                );
+                // 存储二级分类商品数据
+                this.categoryGoods.result = response.result;
+                // 更新加载状态
+                this.categoryGoods.status = "success";
+            } catch (e) {
+                // 更新加载状态
+                this.categoryGoods.status = "error";
             }
         },
     }
