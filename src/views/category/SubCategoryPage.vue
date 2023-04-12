@@ -8,7 +8,6 @@
             <!-- 将商品列表传递到下层组件中 -->
             <GoodsList :goodsList="categoryGoods.result.items" />
         </div>
-        <GoodsList />
     </div>
 </template>
 
@@ -20,7 +19,7 @@ import GoodsList from "./components/GoodsList.vue";
 
 import useCategoryStore from "@/stores/categoryStore";
 import type { GoodsRequestParams } from "@/types/Home/Category";
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { storeToRefs } from "pinia";
 
 const category_soter = useCategoryStore();
@@ -28,12 +27,10 @@ const route = useRoute();
 let { categoryGoods } = storeToRefs(category_soter);
 let { getCategoryGoods } = category_soter;
 
-// 用于存储筛选条件
-let filterParams = {};
-// 用于存储排序条件
-let sortParams = {};
-// 用于存储分页数据
-let pageParams = { page: 1, pageSize: 2 };
+
+let filterParams = {};// 用于存储筛选条件
+let sortParams = {};// 用于存储排序条件
+let pageParams = { page: 1, pageSize: 13 };// 用于存储分页数据
 
 // 用于更新筛选条件
 function updateFilterParams(params: Partial<GoodsRequestParams>) {
@@ -53,10 +50,16 @@ function sendRequest() {
     // 合并请求参数
     const reqParams = getReqParams();
     // 发送请求获取商品列表
-    getCategoryGoods(route.params.sub as string, reqParams);
+    getCategoryGoods(route.params.id as string, reqParams);
+    // console.log(route.params);
 }
 // 初始获取商品列表数据
 sendRequest();
+
+onBeforeRouteUpdate(to => {
+    console.log(to);
+    getCategoryGoods(to.params.id as string, getReqParams())
+})
 </script>
 
 <style lang="">
