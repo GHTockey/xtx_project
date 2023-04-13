@@ -141,19 +141,40 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
             }
         },
         async getCategoryGoods(categoryId, reqParams) {
+            // console.log(this.categoryGoods.status);
+            // 如果数据已经加载完成, 不再进行加载
+            if (this.categoryGoods.status === "finished") return;
             // 更新加载状态
             this.categoryGoods.status = "loading";
             // 捕获错误
             try {
                 // 发送请求获取二级分类商品数据
-                let response = await CategoryAPI.getCategoryGoods(
-                    categoryId,
-                    reqParams
-                );
-                // 存储二级分类商品数据
-                this.categoryGoods.result = response.result;
-                // 更新加载状态
-                this.categoryGoods.status = "success";
+                let res = await CategoryAPI.getCategoryGoods(categoryId, reqParams);
+                console.log(reqParams);
+                if (reqParams?.page === 1) {
+                    // 存储二级分类商品数据
+                    this.categoryGoods.result = res.result;
+                } else {
+                    // 不是第一页 叠加数据
+                    // console.log(res.result,this.categoryGoods.result);
+                    this.categoryGoods.result = {
+                        ...res.result,
+                        items: [
+                            ...this.categoryGoods.result.items,
+                            ...res.result.items,
+                        ],
+                    };
+                    // console.log(this.categoryGoods.result);
+                }
+
+                // 如果当前请求页已经是最后一页或者服务端没有商品数据
+                if (reqParams?.page === res.result.pages || res.result.pages === 0) {
+                    // 更新加载状态
+                    this.categoryGoods.status = "finished";
+                } else {
+                    // 更新加载状态
+                    this.categoryGoods.status = "success";
+                }
             } catch (e) {
                 // 更新加载状态
                 this.categoryGoods.status = "error";

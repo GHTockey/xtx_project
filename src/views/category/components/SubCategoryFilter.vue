@@ -51,10 +51,11 @@ const route = useRoute();
 const { subCategoryFilters } = storeToRefs(category_store);
 const { getSubCategoryFilters } = category_store;
 getSubCategoryFilters(route.params.sid as string);
-onBeforeRouteUpdate((to) => {
-    getSubCategoryFilters(to.params.sid as string);
-});
 
+
+const emit = defineEmits<{
+    (e: "onChanged", params: FilterParams): void;
+}>();
 
 // 用户选择筛选条件时使用的类型
 interface SelectedFilters {
@@ -89,11 +90,20 @@ function selectedFiltersChanged(filters: Partial<SelectedFilters>) {
         }
     }, {})
     console.log(r);
+    // 将用户选择的筛选条件传递到父父组件以备使用
+    emit("onChanged", r);
 };
 
 // onUpdated(() => {
 //     console.log('页面更新');
 // });
+
+// 当路由发生变化时
+onBeforeRouteUpdate((to) => {
+    getSubCategoryFilters(to.params.sid as string);
+    // 重置用户选择的筛选条件
+    selectedFilters.value = {};
+});
 </script>
   
 <style scoped lang="less">
@@ -126,8 +136,9 @@ function selectedFiltersChanged(filters: Partial<SelectedFilters>) {
         }
     }
 }
+
 // 整个组件
 .xtx-skeleton {
-  margin: 10px 0;
+    margin: 10px 0;
 }
 </style>

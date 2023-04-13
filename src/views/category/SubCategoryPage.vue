@@ -8,10 +8,13 @@
             <!-- 将商品列表传递到下层组件中 -->
             <GoodsList :goodsList="categoryGoods.result.items" />
         </div>
+        <XtxInfiniteLoading @infinite="loadMore" :loading="categoryGoods.status === 'loading'"
+            :finished="categoryGoods.status === 'finished'" />
     </div>
 </template>
 
 <script setup lang="ts">
+import XtxInfiniteLoading from "@/components/XtxInfiniteLoading.vue";
 import SubCategoryBread from "./components/SubCategoryBread.vue";
 import SubCategoryFilter from "./components/SubCategoryFilter.vue";
 import SubCategorySort from "./components/SubCategorySort.vue";
@@ -30,7 +33,7 @@ let { getCategoryGoods } = category_soter;
 
 let filterParams = {};// 用于存储筛选条件
 let sortParams = {};// 用于存储排序条件
-let pageParams = { page: 1, pageSize: 13 };// 用于存储分页数据
+let pageParams = { page: 1, pageSize: 10 };// 用于存储分页数据
 
 // 用于更新筛选条件
 function updateFilterParams(params: Partial<GoodsRequestParams>) {
@@ -47,19 +50,32 @@ function getReqParams() {
 }
 // 用于发送请求获取商品列表
 function sendRequest() {
-    // 合并请求参数
-    const reqParams = getReqParams();
+    // console.log(123,getReqParams());
     // 发送请求获取商品列表
-    getCategoryGoods(route.params.id as string, reqParams);
+    getCategoryGoods(route.params.id as string, getReqParams());
     // console.log(route.params);
 }
 // 初始获取商品列表数据
 sendRequest();
 
 onBeforeRouteUpdate(to => {
-    console.log(to);
+    console.log('路由变化');
+    // console.log(route.params.id, to.params.id);
+    filterParams = {}
+    pageParams.page = 1
+    categoryGoods.value.status = 'loading';
     getCategoryGoods(to.params.id as string, getReqParams())
-})
+});
+
+
+// 加载更多商品
+function loadMore() {
+    console.log('加载更多');
+    // 累加页码
+    pageParams.page = pageParams.page + 1;
+    // 发送请求获取商品列表
+    getCategoryGoods(route.params.id as string, getReqParams());
+}
 </script>
 
 <style lang="">
