@@ -1,15 +1,5 @@
 import type { Brand } from "../Home";
 
-export interface Goods {
-    id: string;
-    name: string;
-    desc: string;
-    price: string;
-    picture: string;
-    discount: number | null;
-    orderNum: number | null;
-}
-
 export interface Category {
     id: string;
     name: string;
@@ -21,6 +11,9 @@ export interface Category {
 
     saleProperties: SaleProperty[];
     brands: Brand[];
+
+    layer: number;
+    parent: Category | undefined;
 }
 /**666 */
 interface SaleProperty {

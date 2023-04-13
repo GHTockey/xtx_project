@@ -3,7 +3,8 @@ import CategoryAPI from "@/api/CategoryAPI";
 import { reactive, ref } from "vue";
 
 import type { Status } from '@/types/Status';
-import type { Category, Pagination, Goods, GoodsRequestParams } from "@/types/Home/Category";
+import type { Category, Pagination, GoodsRequestParams } from "@/types/Home/Category";
+import type { Goods } from "@/types/Goods";
 
 // 定义 Store 对象中状态的类型
 type State = {
@@ -150,7 +151,7 @@ export default defineStore<string, State, Getters, Actions>('category_store', {
             try {
                 // 发送请求获取二级分类商品数据
                 let res = await CategoryAPI.getCategoryGoods(categoryId, reqParams);
-                console.log(reqParams);
+                // console.log(reqParams);
                 if (reqParams?.page === 1) {
                     // 存储二级分类商品数据
                     this.categoryGoods.result = res.result;

@@ -3,7 +3,8 @@ import HomeAPI from "@/api/HomeAPI";
 
 import type { Brand, Banner, HotRecommends, Special } from "@/types/Home";
 import type { Status } from "@/types/Status";
-import type { Goods, Category } from "@/types/Home/Category";
+import type { Category } from "@/types/Home/Category";
+import type { Goods } from "@/types/Goods";
 
 interface State {
     // 左侧品牌

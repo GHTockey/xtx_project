@@ -7,23 +7,21 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: '布局',
       component: () => import('../components/XtxLayout.vue'),
       children: [
         // 在children中path留空表示父组件一旦加载同时加载此组件
         // 主页
-        { path: '', name: 'home', component: () => import('@/views/home/HomePage.vue') },
+        { path: '', name: '主页', component: () => import('@/views/home/HomePage.vue') },
         // 一级分类
-        { path: 'category/:id', name: "topCategory", component: () => import('@/views/category/TopCategoryPage.vue') },
+        { path: 'category/:id', name: "一级分类", component: () => import('@/views/category/TopCategoryPage.vue') },
         // 二级分类
-        { path: 'category/sub/:id/:sid', name: "subCategory", component: () => import('@/views/category/SubCategoryPage.vue') },
+        { path: 'category/sub/:id/:sid', name: "二级分类", component: () => import('@/views/category/SubCategoryPage.vue') },
+        // 商品详情
+        { path: 'goods/:id', name: '商品详情', component: () => import('@/views/goods/GoodsDetailPage.vue') },
       ]
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/login/index.vue')
-    },
+    { path: '/login', name: '登录页', component: () => import('@/views/login/index.vue') },
   ]
 })
 

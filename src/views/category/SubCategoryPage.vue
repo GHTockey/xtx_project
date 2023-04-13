@@ -54,23 +54,24 @@ function sendRequest() {
     // 发送请求获取商品列表
     getCategoryGoods(route.params.id as string, getReqParams());
     // console.log(route.params);
+    pageParams.page = 1
+    categoryGoods.value.status = 'loading';
 }
 // 初始获取商品列表数据
 sendRequest();
 
 onBeforeRouteUpdate(to => {
-    console.log('路由变化');
-    // console.log(route.params.id, to.params.id);
-    filterParams = {}
-    pageParams.page = 1
+    // console.log('路由变化');
+    filterParams = {};
+    pageParams.page = 1;
     categoryGoods.value.status = 'loading';
-    getCategoryGoods(to.params.id as string, getReqParams())
+    getCategoryGoods(to.params.id as string, getReqParams());
 });
 
 
 // 加载更多商品
 function loadMore() {
-    console.log('加载更多');
+    // console.log('加载更多');
     // 累加页码
     pageParams.page = pageParams.page + 1;
     // 发送请求获取商品列表

@@ -15,7 +15,7 @@ import { ref, watch } from "vue";
 // modelValue: v-model
 // checked 不使用双向数据绑定时, 状态的默认值
 // 此处注意: 虽然 modelValue 是可选的, 但是它的默认值不是 undefined 而是 false
-const props = withDefaults(defineProps<{ valueModel: boolean, checked?: boolean }>(), {
+const props = withDefaults(defineProps<{ valueModel?: boolean, checked?: boolean }>(), {
     valueModel: undefined,
 });
 const emit = defineEmits<{
