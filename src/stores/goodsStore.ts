@@ -16,7 +16,10 @@ type Actions = {
 };
 
 type Getters = {
+    // 减少层级
     mainPictures(): string[]
+    // 获取商品基本信息
+    baseInfo(): Pick<Goods, "name" | "desc" | "price" | "oldPrice">;
 };
 
 export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods_store', {
@@ -75,6 +78,10 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
     getters: {
         mainPictures() {
             return this.goodsInfo.result.mainPictures
+        },
+        baseInfo() {
+            const { name, desc, price, oldPrice } = this.goodsInfo.result;
+            return { name, desc, price, oldPrice };
         },
     }
 })

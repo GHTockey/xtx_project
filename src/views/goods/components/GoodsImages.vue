@@ -11,8 +11,11 @@
             <img :src="mainPictures[current]" />
             <div class="layer" v-show="show" :style="{ top: layerPosition.top + 'px', left: layerPosition.left + 'px' }">
             </div>
+            <!-- 商品销售信息组件 -->
+            <GoodsSales />
         </div>
         <ul class="small">
+            <!-- 小图列表 -->
             <li :class="{ active: i === current }" v-for="item, i in mainPictures" :key="i" @mouseenter="current = i">
                 <img :src="item" />
             </li>
@@ -25,6 +28,8 @@ import { storeToRefs } from "pinia";
 import { useGoodsStore } from "@/stores/goodsStore";
 import { reactive, ref, watchEffect } from "vue";
 import { useMouseInElement } from "@vueuse/core";
+
+import GoodsSales from "./GoodsSales.vue";
 
 const goods_store = useGoodsStore();
 let { mainPictures } = storeToRefs(goods_store);

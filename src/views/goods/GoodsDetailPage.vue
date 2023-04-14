@@ -20,7 +20,10 @@
           <GoodsImages />
         </div>
         <!-- 右侧 -->
-        <div class="spec"></div>
+        <div class="spec">
+          <!-- 商品信息组件 -->
+          <GoodsInfo />
+        </div>
       </div>
       <!-- 同类商品 -->
       <!-- 商品详情 -->
@@ -43,6 +46,7 @@
 import XtxBread from "@/components/XtxBread.vue";
 import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import GoodsImages from "./components/GoodsImages.vue";
+import GoodsInfo from "./components/GoodsInfo.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
