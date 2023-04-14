@@ -15,7 +15,9 @@ type Actions = {
     getGoodsInfo(id: string): Promise<void>;
 };
 
-type Getters = {};
+type Getters = {
+    mainPictures(): string[]
+};
 
 export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods_store', {
     state() {
@@ -57,7 +59,6 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
     },
 
     actions: {
-        /** 根据商品 id 获取商品数据 */
         async getGoodsInfo(id) {
             this.goodsInfo.status = 'loading';
             try {
@@ -69,5 +70,11 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             }
         }
 
+    },
+
+    getters: {
+        mainPictures() {
+            return this.goodsInfo.result.mainPictures
+        },
     }
 })

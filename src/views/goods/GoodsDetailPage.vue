@@ -10,12 +10,15 @@
         <XtxBreadItem :path="`/category/sub/${goodsInfo.result.categories[1].id}/${goodsInfo.result.categories[0].id}`">
           {{ goodsInfo.result.categories[0].name }}
         </XtxBreadItem>
-        <XtxBreadItem> {{goodsInfo.result.name }}</XtxBreadItem>
+        <XtxBreadItem> {{ goodsInfo.result.name }}</XtxBreadItem>
       </XtxBread>
       <!-- 商品信息 -->
       <div class="goods-info">
         <!-- 左侧 -->
-        <div class="media"></div>
+        <div class="media">
+          <!-- 商品图片组件 -->
+          <GoodsImages />
+        </div>
         <!-- 右侧 -->
         <div class="spec"></div>
       </div>
@@ -36,13 +39,14 @@
   </div>
 </template>
 
-<script  setup lang="ts">
+<script setup lang="ts">
 import XtxBread from "@/components/XtxBread.vue";
 import XtxBreadItem from "@/components/XtxBreadItem.vue";
+import GoodsImages from "./components/GoodsImages.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteUpdate } from "vue-router";
 
 const goods_store = useGoodsStore();
 const route = useRoute();
@@ -50,6 +54,11 @@ let { goodsInfo } = storeToRefs(goods_store);
 let { getGoodsInfo } = goods_store;
 
 getGoodsInfo(route.params.id as string);
+
+
+// onBeforeRouteUpdate(to => {
+//   console.log(666);
+// })
 </script>
   
 <style scoped lang="less">
