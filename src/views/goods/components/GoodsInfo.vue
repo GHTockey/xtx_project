@@ -13,7 +13,7 @@
         </dl>
         <dl>
             <dt>配送</dt>
-            <dd>至</dd>
+            <dd>至 <XtxCity v-model:fullLocation="fullLocation"/> </dd>
         </dl>
         <dl>
             <dt>服务</dt>
@@ -30,7 +30,15 @@
 <script setup lang="ts">
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
+
+import XtxCity from "@/components/XtxCity.vue";
+import { ref } from "vue";
+
 const { baseInfo } = storeToRefs(useGoodsStore());
+
+const fullLocation = ref('')
+
+
 </script>
   
 <style lang="less" scoped>
