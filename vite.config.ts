@@ -35,4 +35,8 @@ export default defineConfig({
       },
     }
   },
+  // 构建
+  build: {
+    assetsInlineLimit: 10000
+  }
 })
