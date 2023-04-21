@@ -28,6 +28,8 @@
             @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete="skuId = undefined" />
           <!-- 商品数量 -->
           <XtxNumberBox :max="goodsInfo.result.inventory" v-model:count="count" label="数量" />
+          <!-- 加入购物车按钮 -->
+          <XtxButton type="primary" :style="{'margin-top': '20px'}">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 同类商品 -->
@@ -54,6 +56,7 @@ import GoodsImages from "./components/GoodsImages.vue";
 import GoodsInfo from "./components/GoodsInfo.vue";
 import GoodsSku from "./components/GoodsSku.vue";
 import XtxNumberBox from "@/components/XtxNumberBox.vue";
+import XtxButton from "@/components/XtxButton.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
