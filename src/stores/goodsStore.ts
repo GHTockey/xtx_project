@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
 import type { Goods } from '@/types/Goods';
+import { chunk } from "lodash";
 
 // 声明组件向外部传递的状态的类型规范
 export interface Data {
@@ -15,12 +16,22 @@ export interface Data {
 type State = {
     // 商品信息
     goodsInfo: { status: Status; result: Goods };
+    // 同类商品和猜你喜欢
+    // [{},{},{},{},{},{},{},{}]
+    // [[{},{},{},{}], [{},{},{},{}]]
+    relevantGoods: {
+        result: Goods[][];
+        status: Status;
+    };
 };
 
 type Actions = {
     /** 根据商品id获取商品信息*/
     getGoodsInfo(id: string): Promise<void>;
+    /** 更新商品信息(规格更新) */
     updateGoods(data: Data): void;
+    /** 获取同类商品(猜你喜欢) */
+    getRelevantGoods(args?: { id?: string; limit?: number }): Promise<void>;
 };
 
 type Getters = {
@@ -65,6 +76,10 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
                     hotByDay: [],
                     evaluationInfo: null,
                 },
+            },
+            relevantGoods: {
+                status: 'idle',
+                result: []
             }
         }
     },
@@ -84,6 +99,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             this.goodsInfo.result.price = data.price;
             this.goodsInfo.result.oldPrice = data.oldPrice;
             this.goodsInfo.result.inventory = data.inventory;
+        },
+        async getRelevantGoods(args) {
+            this.relevantGoods.status = 'loading';
+            try {
+                let res = await GoodsAPI.getRelevantGoods(args);
+                this.relevantGoods.result = chunk(res.result, 4);
+                this.relevantGoods.status = 'success';
+            } catch (error) {
+                this.relevantGoods.status = 'error';
+            }
         },
 
     },

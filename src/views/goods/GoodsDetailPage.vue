@@ -29,10 +29,11 @@
           <!-- 商品数量 -->
           <XtxNumberBox :max="goodsInfo.result.inventory" v-model:count="count" label="数量" />
           <!-- 加入购物车按钮 -->
-          <XtxButton type="primary" :style="{'margin-top': '20px'}">加入购物车</XtxButton>
+          <XtxButton type="primary" :style="{ 'margin-top': '20px' }">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 同类商品 -->
+      <GoodsRelevant />
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
@@ -57,6 +58,7 @@ import GoodsInfo from "./components/GoodsInfo.vue";
 import GoodsSku from "./components/GoodsSku.vue";
 import XtxNumberBox from "@/components/XtxNumberBox.vue";
 import XtxButton from "@/components/XtxButton.vue";
+import GoodsRelevant from "./components/GoodsRelevant.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
