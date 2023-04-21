@@ -24,7 +24,10 @@
           <!-- 商品信息组件 -->
           <GoodsInfo />
           <!-- 商品规格 -->
-          <GoodsSku :specs="goodsInfo.result.specs" />
+          <GoodsSku :skuId="(route.params.id as string)" :specs="goodsInfo.result.specs" :skus="goodsInfo.result.skus"
+            @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete="skuId = undefined" />
+          <!-- 商品数量 -->
+          <XtxNumberBox :max="goodsInfo.result.inventory" v-model:count="count" label="数量" />
         </div>
       </div>
       <!-- 同类商品 -->
@@ -50,18 +53,25 @@ import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import GoodsImages from "./components/GoodsImages.vue";
 import GoodsInfo from "./components/GoodsInfo.vue";
 import GoodsSku from "./components/GoodsSku.vue";
+import XtxNumberBox from "@/components/XtxNumberBox.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
+import { ref } from "vue";
 
 const goods_store = useGoodsStore();
 const route = useRoute();
 let { goodsInfo } = storeToRefs(goods_store);
 let { getGoodsInfo } = goods_store;
 
+// 用户选择的 skuId
+const skuId = ref<string | undefined>();
 getGoodsInfo(route.params.id as string);
 
+// 获取商品信息
+// 用户选择的商品数量
+const count = ref(1);
 
 // onBeforeRouteUpdate(to => {
 //   console.log(666);

@@ -110,6 +110,7 @@ async function show() {
 function updateCities(code: string, level: number, name: string) {
     // 更新城市弹层内容
     cities.value = cities.value.find((city) => city.code === code)!.areaList!;
+    // console.log(level);
     switch (level) {
         case 0:
             addressCode.provinceCode = code;

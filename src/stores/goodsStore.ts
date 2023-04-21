@@ -4,6 +4,13 @@ import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
 import type { Goods } from '@/types/Goods';
 
+// 声明组件向外部传递的状态的类型规范
+export interface Data {
+    price: string;
+    oldPrice: string;
+    inventory: number;
+    skuId: string;
+};
 
 type State = {
     // 商品信息
@@ -13,6 +20,7 @@ type State = {
 type Actions = {
     /** 根据商品id获取商品信息*/
     getGoodsInfo(id: string): Promise<void>;
+    updateGoods(data: Data): void;
 };
 
 type Getters = {
@@ -71,7 +79,12 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             } catch (error) {
                 this.goodsInfo.status = 'error';
             }
-        }
+        },
+        updateGoods(data) {
+            this.goodsInfo.result.price = data.price;
+            this.goodsInfo.result.oldPrice = data.oldPrice;
+            this.goodsInfo.result.inventory = data.inventory;
+        },
 
     },
 
