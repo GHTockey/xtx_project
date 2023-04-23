@@ -50,6 +50,7 @@
         </div>
       </div>
     </div>
+    <!-- 加载状态 -->
     <div class="container loading-container" v-if=" goodsInfo.status === 'loading' ">
       <img src="@/assets/images/loading.gif" alt="" />
     </div>

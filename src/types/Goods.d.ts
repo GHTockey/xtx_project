@@ -56,3 +56,17 @@ export interface GoodsDetailInfo {
     pictures: string[];
     properties: { name: string; value: string }[];
 }
+
+// 评价标签
+export interface EvaluateTag {
+    title: string; // 标签名称
+    tagCount: number; // 被打标签的数量
+}
+// 评价信息
+export interface EvaluateInfo {
+    salesCount: number; // 售卖数量
+    praisePercent: string; // 好评率
+    evaluateCount: number; // 评价数量(总)
+    hasPictureCount: number; // 评价数量(有图)
+    tags: EvaluateTag[]; // 评价标签
+}

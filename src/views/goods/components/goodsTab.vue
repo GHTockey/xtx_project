@@ -5,7 +5,7 @@
       <a @click="activeComponent = 'GoodsDetail'" :class="{ active: activeComponent === 'GoodsDetail' }"
         href="javascript:">商品详情</a>
       <a @click="activeComponent = 'GoodsComment'" :class="{ active: activeComponent === 'GoodsComment' }"
-        href="javascript:">商品评价<span>(500+)</span></a>
+        href="javascript:">商品评价<span>({{ goods_store.evaluateInfo.result.evaluateCount }})</span></a>
     </nav>
     <!-- 切换内容的地方 -->
     <GoodsComment v-show="activeComponent === 'GoodsComment'" />
@@ -17,6 +17,9 @@
 import { ref } from 'vue';
 import GoodsComment from "./GoodsComment.vue";
 import GoodsDetail from "./GoodsDetail.vue";
+import { useGoodsStore } from "@/stores/goodsStore";
+
+const goods_store = useGoodsStore();
 
 // GoodsDetail 展示商品详细信息 GoodsComment 展示商品评论信息
 const activeComponent = ref<"GoodsDetail" | "GoodsComment">("GoodsDetail");

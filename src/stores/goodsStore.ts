@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
-import type { Goods, GoodsDetailInfo } from '@/types/Goods';
+import type { EvaluateInfo, Goods, GoodsDetailInfo } from '@/types/Goods';
 import { chunk } from "lodash";
 
 // 声明组件向外部传递的状态的类型规范
@@ -30,6 +30,11 @@ type State = {
             3: Goods[]; // 总榜
         };
     };
+    // 商品评价信息
+    evaluateInfo: {
+        result: EvaluateInfo;
+        status: Status;
+    };
 };
 
 type Actions = {
@@ -41,6 +46,8 @@ type Actions = {
     getRelevantGoods(args?: { id?: string; limit?: number }): Promise<void>;
     /** 获取热销商品榜单处理程序 */
     getHotSaleGoodsHandler(id: string, limit: number, type: 1 | 2 | 3,): Promise<void>;
+    /** 获取评价头部信息 */
+    getEvaluateInfoHandler(id: string): Promise<void>;
 };
 
 type Getters = {
@@ -95,6 +102,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             hotSaleGoods: {
                 status: 'idle',
                 result: { 1: [], 2: [], 3: [] }
+            },
+            evaluateInfo: {
+                status: 'idle',
+                result: {
+                    salesCount: 0,
+                    praisePercent: "",
+                    evaluateCount: 0,
+                    hasPictureCount: 0,
+                    tags: [],
+                },
             }
         }
     },
@@ -133,6 +150,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
                 this.hotSaleGoods.status = 'success';
             } catch (error) {
                 this.hotSaleGoods.status = 'error';
+            }
+        },
+        async getEvaluateInfoHandler(id) {
+            this.evaluateInfo.status = 'loading';
+            try {
+                let res = await GoodsAPI.getEvaluateInfo(id);
+                this.evaluateInfo.result = res.result;
+                this.evaluateInfo.status = 'success';
+            } catch (error) {
+                this.evaluateInfo.status = 'error';
             }
         },
     },

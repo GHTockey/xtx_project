@@ -1,4 +1,4 @@
-import type { Goods } from "@/types/Goods";
+import type { Goods, EvaluateInfo } from "@/types/Goods";
 import type { Response } from "@/types/Res";
 import XtxRequestManager from "@/utils/request";
 
@@ -27,6 +27,12 @@ export class GoodsAPI {
         return XtxRequestManager.createInstance.request<Response<Goods[]>>({
             url: "/goods/hot",
             params: { id, limit, type },
+        });
+    }
+    /** 获取商品评价信息 */
+    static getEvaluateInfo(id: string) {
+        return XtxRequestManager.createInstance.request<Response<EvaluateInfo>>({
+            url: `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`,
         });
     }
 }
