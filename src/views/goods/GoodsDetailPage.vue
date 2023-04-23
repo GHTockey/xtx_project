@@ -44,9 +44,9 @@
         </div>
         <!-- 24热榜 -->
         <div class="goods-aside">
-          <GoodsHot :id="goodsInfo.result.id" :type= 1  />
-          <GoodsHot :id="goodsInfo.result.id" :type= 2  />
-          <GoodsHot :id="goodsInfo.result.id" :type= 3  />
+          <GoodsHot :id=" goodsInfo.result.id " :type= 1  />
+          <GoodsHot :id=" goodsInfo.result.id " :type= 2  />
+          <GoodsHot :id=" goodsInfo.result.id " :type= 3  />
         </div>
       </div>
     </div>

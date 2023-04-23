@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
-import type { Goods } from '@/types/Goods';
+import type { Goods, GoodsDetailInfo } from '@/types/Goods';
 import { chunk } from "lodash";
 
 // 声明组件向外部传递的状态的类型规范
@@ -48,6 +48,8 @@ type Getters = {
     mainPictures(): string[]
     // 获取商品基本信息
     baseInfo(): Pick<Goods, "name" | "desc" | "price" | "oldPrice">;
+    // 减少层级
+    goodsProperties(): GoodsDetailInfo
 };
 
 export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods_store', {
@@ -143,5 +145,11 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             const { name, desc, price, oldPrice } = this.goodsInfo.result;
             return { name, desc, price, oldPrice };
         },
+        goodsProperties() {
+            return {
+                pictures: this.goodsInfo.result.details.pictures, // 商品详情图片集合
+                properties: this.goodsInfo.result.details.properties, // 商品属性集合
+            }
+        }
     }
 })

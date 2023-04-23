@@ -3,15 +3,22 @@
     <div class="goods-detail">
         <!-- 属性 -->
         <ul class="attrs">
-            <li>
-                <span class="dt">属性名称</span>
-                <span class="dd">属性值</span>
+            <li v-for="item in goodsProperties.properties" :key="item.name">
+                <span class="dt">{{ item.name }}</span>
+                <span class="dd">{{ item.value }}</span>
             </li>
         </ul>
         <!-- 图片 -->
-        <img src="" alt="" />
+        <img v-for="item in goodsProperties.pictures" :src="item" :alt="item" :key="item" />
     </div>
 </template>
+
+<script setup lang="ts">
+import { useGoodsStore } from "@/stores/goodsStore";
+import { storeToRefs } from "pinia";
+
+const { goodsProperties } = storeToRefs(useGoodsStore());
+</script>
 
 <style scoped lang="less">
 .goods-detail {
@@ -42,4 +49,5 @@
     >img {
         width: 100%;
     }
-}</style>
+}
+</style>
