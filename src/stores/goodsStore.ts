@@ -1,4 +1,3 @@
-import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
 import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
@@ -17,11 +16,19 @@ type State = {
     // 商品信息
     goodsInfo: { status: Status; result: Goods };
     // 同类商品和猜你喜欢
-    // [{},{},{},{},{},{},{},{}]
-    // [[{},{},{},{}], [{},{},{},{}]]
+    // [{},{},{},{},{},{},{},{}] ==> [[{},{},{},{}], [{},{},{},{}]]
     relevantGoods: {
         result: Goods[][];
         status: Status;
+    };
+    // 榜单
+    hotSaleGoods: {
+        status: Status;
+        result: { // 榜单数据
+            1: Goods[]; // 24小时榜
+            2: Goods[]; // 周榜
+            3: Goods[]; // 总榜
+        };
     };
 };
 
@@ -32,6 +39,8 @@ type Actions = {
     updateGoods(data: Data): void;
     /** 获取同类商品(猜你喜欢) */
     getRelevantGoods(args?: { id?: string; limit?: number }): Promise<void>;
+    /** 获取热销商品榜单处理程序 */
+    getHotSaleGoodsHandler(id: string, limit: number, type: 1 | 2 | 3,): Promise<void>;
 };
 
 type Getters = {
@@ -80,6 +89,10 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
             relevantGoods: {
                 status: 'idle',
                 result: []
+            },
+            hotSaleGoods: {
+                status: 'idle',
+                result: { 1: [], 2: [], 3: [] }
             }
         }
     },
@@ -110,7 +123,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
                 this.relevantGoods.status = 'error';
             }
         },
-
+        async getHotSaleGoodsHandler(id, limit, type) {
+            this.hotSaleGoods.status = 'loading';
+            try {
+                let res = await GoodsAPI.getHotSaleGoods(id, limit, type);
+                this.hotSaleGoods.result[type] = res.result;
+                this.hotSaleGoods.status = 'success';
+            } catch (error) {
+                this.hotSaleGoods.status = 'error';
+            }
+        },
     },
 
     getters: {

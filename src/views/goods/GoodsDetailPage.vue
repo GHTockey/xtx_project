@@ -25,11 +25,11 @@
           <GoodsInfo />
           <!-- 商品规格 -->
           <GoodsSku :skuId="(route.params.id as string)" :specs="goodsInfo.result.specs" :skus="goodsInfo.result.skus"
-            @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete="skuId = undefined" />
+            @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete=" skuId = undefined " />
           <!-- 商品数量 -->
-          <XtxNumberBox :max="goodsInfo.result.inventory" v-model:count="count" label="数量" />
+          <XtxNumberBox :max=" goodsInfo.result.inventory " v-model:count=" count " label="数量" />
           <!-- 加入购物车按钮 -->
-          <XtxButton type="primary" :style="{ 'margin-top': '20px' }">加入购物车</XtxButton>
+          <XtxButton type="primary" :style=" { 'margin-top': '20px' } ">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 同类商品 -->
@@ -43,10 +43,14 @@
           </div>
         </div>
         <!-- 24热榜 -->
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          <GoodsHot :id="goodsInfo.result.id" :type= 1  />
+          <GoodsHot :id="goodsInfo.result.id" :type= 2  />
+          <GoodsHot :id="goodsInfo.result.id" :type= 3  />
+        </div>
       </div>
     </div>
-    <div class="container loading-container" v-if="goodsInfo.status === 'loading'">
+    <div class="container loading-container" v-if=" goodsInfo.status === 'loading' ">
       <img src="@/assets/images/loading.gif" alt="" />
     </div>
   </div>
@@ -62,6 +66,7 @@ import XtxNumberBox from "@/components/XtxNumberBox.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import GoodsRelevant from "./components/GoodsRelevant.vue";
 import goodsTab from "./components/goodsTab.vue";
+import GoodsHot from "./components/GoodsHot.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
