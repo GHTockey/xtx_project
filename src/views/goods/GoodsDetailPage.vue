@@ -38,7 +38,9 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <div class="goods-tabs">
+            <goodsTab />
+          </div>
         </div>
         <!-- 24热榜 -->
         <div class="goods-aside"></div>
@@ -59,10 +61,11 @@ import GoodsSku from "./components/GoodsSku.vue";
 import XtxNumberBox from "@/components/XtxNumberBox.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import GoodsRelevant from "./components/GoodsRelevant.vue";
+import goodsTab from "./components/goodsTab.vue";
 
 import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
-import { useRoute, onBeforeRouteUpdate } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 const goods_store = useGoodsStore();

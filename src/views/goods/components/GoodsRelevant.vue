@@ -6,7 +6,7 @@
             <span class="title">{{ goodsId ? "同类商品" : "猜你喜欢" }}</span>
         </div>
         <!-- 复用轮播图组件 -->
-        <XtxCarousel :count="relevantGoods.result.length" :list="((<unknown>relevantGoods.result) as Banner[])">
+        <XtxCarousel :list="((<unknown>relevantGoods.result) as Banner[])">
             <template v-for="(group, index) in relevantGoods.result" v-slot:[`default${index}`]>
                 <div class="slider">
                     <router-link v-for="item in group" :key="item.id" :to="`/goods/${item.id}`">
