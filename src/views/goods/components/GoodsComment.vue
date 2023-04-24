@@ -2,11 +2,11 @@
 <template>
     <div class="goods-comment">
         <!-- 评价筛选 -->
-        <CommentScreen />
+        <CommentScreen v-model:reqParams="reqParams" />
         <!-- 评价排序 -->
-        <CommentSort />
+        <CommentSort v-model:reqParams="reqParams" />
         <!-- 评价列表 -->
-        <CommentList />
+        <CommentList :reqParams="reqParams" />
     </div>
 </template>
 
@@ -14,6 +14,17 @@
 import CommentScreen from "./CommentScreen.vue";
 import CommentSort from "./CommentSort.vue";
 import CommentList from "./CommentList.vue";
+
+import type { EvaluateRequestParams } from "@/types/Goods";
+import { ref } from "vue";
+// 评价列表请求参数
+const reqParams = ref<EvaluateRequestParams>({
+    page: 1,
+    pageSize: 10,
+    hasPicture: false,
+    tag: "全部评价",
+    sortField: "",
+});
 </script>
   
 <style scoped lang="less">

@@ -1,21 +1,24 @@
 <!-- 评价列表商品图片组件: src/views/goods/components/CommentImage.vue -->
 <script setup lang="ts">
+import { ref } from 'vue';
+
 // 接收商品图片列表
 defineProps<{ pictures: string[] }>();
+const current = ref("");
 </script>
 
 <template>
-    <div class="goods-comment-image">
-        <div class="list">
-            <a href="javascript:">
-                <img src="" alt="" />
-            </a>
-        </div>
-        <div class="preview">
-            <img src="" alt="" />
-            <i class="iconfont icon-close-new"></i>
-        </div>
+  <div class="goods-comment-image">
+    <div class="list">
+      <a href="javascript:" v-for="picture in pictures">
+        <img @click="current = picture" :src="picture" />
+      </a>
     </div>
+    <div class="preview" v-if="current">
+      <img :src="current" alt="" />
+      <i @click="current = ''" class="iconfont icon-close-new"></i>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="less">

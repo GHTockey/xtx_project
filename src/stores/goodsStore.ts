@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import { GoodsAPI } from "@/api/GoodsAPI";
 import type { Status } from '@/types/Status';
-import type { EvaluateInfo, Goods, GoodsDetailInfo } from '@/types/Goods';
+import type { Evaluate, EvaluateInfo, EvaluateRequestParams, Goods, GoodsDetailInfo } from '@/types/Goods';
 import { chunk } from "lodash";
+import type { Pagination } from '@/types/Home/Category';
 
 // 声明组件向外部传递的状态的类型规范
 export interface Data {
@@ -35,10 +36,15 @@ type State = {
         result: EvaluateInfo;
         status: Status;
     };
+    // 商品评价列表
+    evaluateList: {
+        status: Status;
+        result: Pagination<Evaluate>;
+    };
 };
 
 type Actions = {
-    /** 根据商品id获取商品信息*/
+    /** 根据商品id获取商品信息 */
     getGoodsInfo(id: string): Promise<void>;
     /** 更新商品信息(规格更新) */
     updateGoods(data: Data): void;
@@ -48,6 +54,8 @@ type Actions = {
     getHotSaleGoodsHandler(id: string, limit: number, type: 1 | 2 | 3,): Promise<void>;
     /** 获取评价头部信息 */
     getEvaluateInfoHandler(id: string): Promise<void>;
+    /** 获取评价列表 */
+    getEvaluateList(id: string, reqParams: EvaluateRequestParams): Promise<void>;
 };
 
 type Getters = {
@@ -112,6 +120,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
                     hasPictureCount: 0,
                     tags: [],
                 },
+            },
+            evaluateList: {
+                status: 'idle',
+                result: {
+                    page: 0,
+                    pages: 0,
+                    pageSize: 0,
+                    counts: 0,
+                    items: [],
+                },
             }
         }
     },
@@ -160,6 +178,16 @@ export const useGoodsStore = defineStore<string, State, Getters, Actions>('goods
                 this.evaluateInfo.status = 'success';
             } catch (error) {
                 this.evaluateInfo.status = 'error';
+            }
+        },
+        async getEvaluateList(id, reqParams) {
+            this.evaluateList.status = 'loading';
+            try {
+                let res = await GoodsAPI.getEvaluateList(id, reqParams);
+                this.evaluateList.result = res.result;
+                this.evaluateList.status = 'success';
+            } catch (error) {
+                this.evaluateList.status = 'error';
             }
         },
     },

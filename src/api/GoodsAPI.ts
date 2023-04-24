@@ -1,4 +1,5 @@
-import type { Goods, EvaluateInfo } from "@/types/Goods";
+import type { Goods, EvaluateInfo, EvaluateRequestParams, Evaluate } from "@/types/Goods";
+import type { Pagination } from "@/types/Home/Category";
 import type { Response } from "@/types/Res";
 import XtxRequestManager from "@/utils/request";
 
@@ -29,10 +30,17 @@ export class GoodsAPI {
             params: { id, limit, type },
         });
     }
-    /** 获取商品评价信息 */
+    /** 获取商品评价信息API */
     static getEvaluateInfo(id: string) {
         return XtxRequestManager.createInstance.request<Response<EvaluateInfo>>({
             url: `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`,
+        });
+    }
+    // 获取商品评价列表
+    static getEvaluateList(id: string, reqParams: EvaluateRequestParams) {
+        return XtxRequestManager.createInstance.request<Response<Pagination<Evaluate>>>({
+            url: `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`,
+            params: reqParams,
         });
     }
 }

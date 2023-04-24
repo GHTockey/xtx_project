@@ -70,3 +70,35 @@ export interface EvaluateInfo {
     hasPictureCount: number; // 评价数量(有图)
     tags: EvaluateTag[]; // 评价标签
 }
+// 获取评价列表的请求参数接口规范
+export interface EvaluateRequestParams {
+    page: number;
+    pageSize: number;
+    hasPicture: boolean;
+    tag: string;
+    sortField: "" | "praiseCount" | "createTime";
+}
+
+import { User } from "./User";
+export interface Evaluate {
+    id: string;
+    score: number;
+    content: string;
+    officialReply: string;
+    praiseCount: number;
+    createTime: string;
+    orderInfo: {
+        quantity: number;
+        createTime: string;
+        specs: EvaluateSpec[];
+    };
+    member: Pick<User, "id" | "nickname" | "avatar">;
+    tags: string[];
+    pictures: string[];
+}
+
+// 评价中的规格
+export interface EvaluateSpec {
+    name: string;
+    nameValue: string;
+}
