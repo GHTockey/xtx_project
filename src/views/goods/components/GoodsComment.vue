@@ -7,6 +7,9 @@
         <CommentSort v-model:reqParams="reqParams" />
         <!-- 评价列表 -->
         <CommentList :reqParams="reqParams" />
+        <!-- 分页组件 -->
+        <XtxPagination v-if="evaluateList.result.pages > 1" v-model:currentPage="reqParams.page"
+            :pages="evaluateList.result.pages" :maxPage="3" @onChange="changeGetEvaluateList" />
     </div>
 </template>
 
@@ -14,6 +17,10 @@
 import CommentScreen from "./CommentScreen.vue";
 import CommentSort from "./CommentSort.vue";
 import CommentList from "./CommentList.vue";
+import XtxPagination from "@/components/XtxPagination.vue";
+import { storeToRefs } from "pinia";
+import { useGoodsStore } from "@/stores/goodsStore";
+import { useRoute } from "vue-router";
 
 import type { EvaluateRequestParams } from "@/types/Goods";
 import { ref } from "vue";
@@ -25,6 +32,14 @@ const reqParams = ref<EvaluateRequestParams>({
     tag: "全部评价",
     sortField: "",
 });
+
+const route = useRoute();
+const goods_store = useGoodsStore();
+const { evaluateList } = storeToRefs(goods_store);
+const { getEvaluateList } = goods_store;
+function changeGetEvaluateList() {
+    getEvaluateList(<string>route.params.id, reqParams.value)
+}
 </script>
   
 <style scoped lang="less">

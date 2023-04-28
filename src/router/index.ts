@@ -21,7 +21,7 @@ const router = createRouter({
         { path: 'goods/:id', name: '商品详情', component: () => import('@/views/goods/GoodsDetailPage.vue') },
       ]
     },
-    { path: '/login', name: '登录页', component: () => import('@/views/login/index.vue') },
+    { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },
   ]
 })
 
