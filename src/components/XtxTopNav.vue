@@ -2,8 +2,8 @@
     <nav class="app-top-nav">
         <div class="container">
             <ul>
-                <template v-if="profile.token">
-                    <li><a href="javascript:"><i class="iconfont icon-user"></i>{{ profile.account }}</a></li>
+                <template v-if="profile.result.token">
+                    <li><a href="javascript:"><i class="iconfont icon-user"></i>{{ profile.result.account }}</a></li>
                     <li><a href="javascript:">退出登录</a></li>
                 </template>
                 <template v-else>
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import useUserStore from "@/stores/user";
+import {useUserStore} from "@/stores/userStore";
 import { storeToRefs } from "pinia";
 
 const { profile } = storeToRefs(useUserStore());

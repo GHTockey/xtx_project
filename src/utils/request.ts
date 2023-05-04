@@ -1,5 +1,5 @@
 import axios from "axios";
-import useUserStore from "@/stores/user";
+import {useUserStore} from "@/stores/userStore";
 import router from "@/router";
 
 import type {
@@ -25,7 +25,7 @@ export default class XtxRequestManager {
         // 请求拦截 (安装 axios@0.27.2 否则有类型报错)
         this._instance.interceptors.request.use((config: AxiosRequestConfig) => {
             // 添加 token 到请求头
-            let token = this._userStore.profile.token
+            let token = this._userStore.profile.result.token
             if (token) config.headers = { Authorization: `Bearer ${token}` }
             return config
         })
