@@ -4,7 +4,7 @@
             <ul>
                 <template v-if="profile.result.token">
                     <li><a href="javascript:"><i class="iconfont icon-user"></i>{{ profile.result.account }}</a></li>
-                    <li><a href="javascript:">退出登录</a></li>
+                    <li><a href="javascript:" @click="logout">退出登录</a></li>
                 </template>
                 <template v-else>
                     <li><router-link to="/login">请先登录</router-link></li>
@@ -21,10 +21,18 @@
 </template>
 
 <script lang="ts" setup>
-import {useUserStore} from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 import { storeToRefs } from "pinia";
+import { useRouter } from 'vue-router';
 
-const { profile } = storeToRefs(useUserStore());
+const router = useRouter();
+const user_store = useUserStore();
+const { profile } = storeToRefs(user_store);
+
+function logout() {
+    user_store.$reset()
+    router.push('/')
+}
 </script>
   
 <style scoped lang="less">

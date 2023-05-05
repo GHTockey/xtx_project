@@ -43,14 +43,12 @@ import { useForm, Field, ErrorMessage } from "vee-validate";
 import * as zod from "zod";
 import { useUserStore } from "@/stores/userStore";
 import { AuthAPI } from "@/api/AuthAPI";
-import { watch } from "vue";
 import { useRouter } from "vue-router";
-import { getCurrentInstance } from "vue";
 
 const validationSchema = toFormValidator(
     zod.object({
         account: zod
-            .string({ required_error: "请输入用户名" })
+            .string()
             .regex(/^[a-zA-Z]\w{5,19}$/, "字母开头且6-20个字符"),
         password: zod
             .string({ required_error: "请输入密码" })
@@ -81,12 +79,12 @@ const onSubmit = handleSubmit(async (formValue) => {
     await user_store.login(() => AuthAPI.loginByAccount(formValue.account, formValue.password))
 });
 
-watch(() => user_store.profile.status, (status) => {
-    if (status === 'success') {
-        alert('登录成功')
-        router.push('/')
-    } else if (status === 'error') {
-        alert('登录失败')
-    }
-})
+// watch(() => user_store.profile.status, (status) => {
+//     if (status === 'success') {
+//         alert('登录成功')
+//         router.push('/')
+//     } else if (status === 'error') {
+//         alert('登录失败')
+//     }
+// })
 </script>

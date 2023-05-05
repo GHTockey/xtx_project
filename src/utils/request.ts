@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useUserStore} from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 import router from "@/router";
 
 import type {
@@ -33,11 +33,14 @@ export default class XtxRequestManager {
         this._instance.interceptors.response.use((response: AxiosResponse) => {
             return response.data
         }, (err: AxiosError) => {
+            // console.log(err.response?.data,555);
             if (err.response?.status == 401) {
                 // 清空用户信息
                 this._userStore.$reset()
                 // 跳转登录页
                 router.push('login')
+            } else {
+                throw Error(err.response?.data?.message || '未知的错误')
             }
         })
     }

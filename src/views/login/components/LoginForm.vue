@@ -10,7 +10,7 @@ const accountLogin = ref(true);
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from 'vue-router';
 const userStore = useUserStore();
-// 获取组件实例
+// 获取组件实例 getCurrentInstance() 是 Vue 3 中引入的一个新函数，它允许您在 setup 函数或生命周期钩子中访问当前的 Vue 实例。
 const $ = getCurrentInstance();
 // 获取路由对象
 const router = useRouter();
