@@ -1,12 +1,12 @@
 <!-- src/views/login/components/MessageLogin.vue -->
 <template>
     <form @submit.prevent="onSubmit">
-        <Field name="phone" class="form-item" as="div" v-slot="{ field }">
+        <Field name="mobile" class="form-item" as="div" v-slot="{ field }">
             <div class="input">
                 <i class="iconfont icon-user"></i>
                 <input type="text" placeholder="请输入手机号" v-bind="field" />
             </div>
-            <ErrorMessage name="phone" as="div" class="error" v-slot="{ message }">
+            <ErrorMessage name="mobile" as="div" class="error" v-slot="{ message }">
                 <i class="iconfont icon-warning">{{ message }}</i>
             </ErrorMessage>
         </Field>
@@ -45,6 +45,7 @@ import * as zod from "zod";
 import { AuthAPI } from "@/api/AuthAPI";
 import { AxiosError } from "axios";
 import useCountdown from "@/logics/useCountdown";
+import { useUserStore } from "@/stores/userStore";
 
 const $ = getCurrentInstance(); // 组件实例
 const { start, isActive, count } = useCountdown();
@@ -52,7 +53,7 @@ const { start, isActive, count } = useCountdown();
 // 创建表单规则对象
 const rules = toFormValidator(
     zod.object({
-        phone: zod
+        mobile: zod
             .string()
             .regex(/^1[3456789]\d{9}$/, '请输入正确的手机号码'),
         code: zod
@@ -64,25 +65,25 @@ const rules = toFormValidator(
 const { handleSubmit, validateField, values } = useForm({
     validationSchema: rules,
     initialValues: {
-        phone: '',
+        mobile: '',
         code: '',
         isAgree: false
     }
 });
 // 表单提交
-function onSubmit() {
-    // handleSubmit(()=>api)
-};
+const onSubmit = handleSubmit(() => {
+    useUserStore().login(() => AuthAPI.loginByMobileMsgCode(values.mobile, values.code))
+})
 
 // 发送验证码事件
 async function sendMsgCode() {
     // 正在倒计时 代码停止执行
     if (isActive.value) return;
     // 检查手机号
-    let { valid } = await validateField('phone');
+    let { valid } = await validateField('mobile');
     if (!valid) return; // 验证不通过，阻止执行
     try {
-        await AuthAPI.sendMsgCodeOfMobileLogin(values.phone) // 发起请求
+        await AuthAPI.sendMsgCodeOfMobileLogin(values.mobile) // 发起请求
         start(60);
         $?.proxy?.$msg({ type: 'success', msg: '手机验证码发送成功' }) // 消息提示
     } catch (error) {

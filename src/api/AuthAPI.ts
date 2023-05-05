@@ -20,5 +20,13 @@ export class AuthAPI {
          url: "/login/code",
          params: { mobile },
       });
-   }
+   };
+   // 手机验证码登录
+   static loginByMobileMsgCode(mobile: string, code: string) {
+      return XtxRequestManager.createInstance.request<Response<User>>({
+         url: "/login/code",
+         method: "post",
+         data: { mobile, code },
+      });
+   };
 }
