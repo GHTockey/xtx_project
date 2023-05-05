@@ -4,7 +4,7 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue"
-  ],
+, "vue-global-props.d.ts"  ],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",

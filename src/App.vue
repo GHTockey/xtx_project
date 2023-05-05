@@ -13,6 +13,7 @@
 // import { ref } from "vue";
 
 // const isAgree = ref(false);
+
 </script>
 
 <style scoped lang="less"></style>

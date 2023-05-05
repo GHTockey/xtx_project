@@ -1,11 +1,36 @@
 <!-- 登录表单组件: src/views/login/components/LoginForm.vue  -->
 <script setup lang="ts">
-import { ref } from 'vue';
+import { getCurrentInstance, ref, watch } from 'vue';
 import AccountLogin from "./AccountLogin.vue";
 import MessageLogin from "./MessageLogin.vue";
 
 // 是否为账号登录
 const accountLogin = ref(true);
+
+import { useUserStore } from "@/stores/userStore";
+import { useRouter } from 'vue-router';
+const userStore = useUserStore();
+// 获取组件实例
+const $ = getCurrentInstance();
+// 获取路由对象
+const router = useRouter();
+
+// 监听登录状态
+watch(
+    () => userStore.profile.status,
+    (status) => {
+        // 如果登录成功
+        if (status === "success") {
+            // 消息提示
+            $?.proxy?.$msg({ type: "success", msg: "登录成功" });
+            // 跳转到首页
+            router.push("/");
+        } else if (status === "error") {
+            // 如果登录失败
+            $?.proxy?.$msg({ type: "error", msg: userStore.profile.error });
+        }
+    }
+);
 </script>
 
 <template>
@@ -65,4 +90,5 @@ const accountLogin = ref(true);
             }
         }
     }
-}</style>
+}
+</style>

@@ -8,7 +8,11 @@ import router from './router'
 import "@/assets/styles/common.less";
 import "normalize.css";
 
+
 const app = createApp(App)
+
+import plugins from "@/components/library";
+app.use(plugins)
 
 app.use(createPinia().use(persistedstate))
 app.use(router)

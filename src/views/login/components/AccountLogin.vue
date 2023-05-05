@@ -45,6 +45,7 @@ import { useUserStore } from "@/stores/userStore";
 import { AuthAPI } from "@/api/AuthAPI";
 import { watch } from "vue";
 import { useRouter } from "vue-router";
+import { getCurrentInstance } from "vue";
 
 const validationSchema = toFormValidator(
     zod.object({
