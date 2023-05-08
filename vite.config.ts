@@ -14,9 +14,9 @@ export default defineConfig({
     }
   },
   // 配置端口
-  // server: {
-  //   port: 11451
-  // },
+  server: {
+    port: 8080
+  },
 
   // 配置 css 预处理器
   css: {

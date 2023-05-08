@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHistory(import.meta.env.BASE_URL), // 黑丝的瑞
+  history: createWebHashHistory(import.meta.env.BASE_URL), // 哈希
   scrollBehavior: () => ({ top: 0 }), // 路由一旦发生变化就回到顶部
   routes: [
     {
@@ -22,6 +23,7 @@ const router = createRouter({
       ]
     },
     { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },
+    { path: '/login/callback', name: "联合登录页", component: () => import('@/views/login/QQLoginBack.vue') }
   ]
 })
 
