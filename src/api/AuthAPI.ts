@@ -8,10 +8,7 @@ export class AuthAPI {
       return XtxRequestManager.createInstance.request<Response<User>>({
          url: "http://pcapi-xiaotuxian-front-devtest.itheima.net/login",
          method: "post",
-         data: {
-            account,
-            password,
-         },
+         data: { account, password },
       });
    };
    // 发送短信验证码(手机号登录)
@@ -42,7 +39,7 @@ export class AuthAPI {
       return XtxRequestManager.createInstance.request<Response<null>>({
          url: "/login/social/code",
          method: "get",
-         data: { mobile, unionId, source },
+         params: { mobile, unionId, source },
       });
    };
    // QQ登录: 绑定站点已有账号
@@ -51,6 +48,28 @@ export class AuthAPI {
          url: "/login/social/bind",
          method: "post",
          data: { mobile, code, unionId },
+      });
+   };
+   // 验证用户名是否唯一 valid: true 表示用户名已存在  false 表示用户名不存在
+   static checkAccountUnique(account: string) {
+      return XtxRequestManager.createInstance.request<Response<{ valid: boolean }>>({
+         url: "/register/check",
+         params: { account },
+      });
+   };
+   // 发送短信验证码(绑定新注册账号)
+   static sendMsgCodeOfRegister(mobile: string) {
+      return XtxRequestManager.createInstance.request<Response<null>>({
+         url: "/register/code",
+         params: { mobile },
+      });
+   };
+   // QQ登录: 绑定新注册账号
+   static loginByBindNewAccount(unionId: string, user: { account: string; password: string; mobile: string; code: string }) {
+      return XtxRequestManager.createInstance.request<Response<User>>({
+         url: `/login/social/${unionId}/complement`,
+         method: "post",
+         data: user,
       });
    }
 }
