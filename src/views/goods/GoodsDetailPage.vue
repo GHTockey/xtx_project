@@ -25,11 +25,11 @@
           <GoodsInfo />
           <!-- 商品规格 -->
           <GoodsSku :skuId="(route.params.id as string)" :specs="goodsInfo.result.specs" :skus="goodsInfo.result.skus"
-            @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete=" skuId = undefined " />
+            @complete="goods_store.updateGoods($event); skuId = $event.skuId;" @uncomplete=" skuId = undefined" />
           <!-- 商品数量 -->
-          <XtxNumberBox :max=" goodsInfo.result.inventory " v-model:count=" count " label="数量" />
+          <XtxNumberBox :max="goodsInfo.result.inventory" v-model:count="count" label="数量" />
           <!-- 加入购物车按钮 -->
-          <XtxButton type="primary" :style=" { 'margin-top': '20px' } ">加入购物车</XtxButton>
+          <XtxButton type="primary" :style="{ 'margin-top': '20px' }" @click="addProductToCart">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 同类商品 -->
@@ -44,14 +44,14 @@
         </div>
         <!-- 24热榜 -->
         <div class="goods-aside">
-          <GoodsHot :id=" goodsInfo.result.id " :type= 1  />
-          <GoodsHot :id=" goodsInfo.result.id " :type= 2  />
-          <GoodsHot :id=" goodsInfo.result.id " :type= 3  />
+          <GoodsHot :id="goodsInfo.result.id" :type=1 />
+          <GoodsHot :id="goodsInfo.result.id" :type=2 />
+          <GoodsHot :id="goodsInfo.result.id" :type=3 />
         </div>
       </div>
     </div>
     <!-- 加载状态 -->
-    <div class="container loading-container" v-if=" goodsInfo.status === 'loading' ">
+    <div class="container loading-container" v-if="goodsInfo.status === 'loading'">
       <img src="@/assets/images/loading.gif" alt="" />
     </div>
   </div>
@@ -69,27 +69,58 @@ import GoodsRelevant from "./components/GoodsRelevant.vue";
 import goodsTab from "./components/goodsTab.vue";
 import GoodsHot from "./components/GoodsHot.vue";
 
-import { useGoodsStore } from "@/stores/goodsStore";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, getCurrentInstance } from "vue";
+import { useGoodsStore } from "@/stores/goodsStore";
+import { useCartStore } from "@/stores/cartStore";
+import { AxiosError } from "axios";
+
+const route = useRoute();
+const $ = getCurrentInstance();
 
 const goods_store = useGoodsStore();
-const route = useRoute();
 let { goodsInfo } = storeToRefs(goods_store);
 let { getGoodsInfo } = goods_store;
 
+const cart_store = useCartStore(); // 购物车 store 对象
+
 // 用户选择的 skuId
 const skuId = ref<string | undefined>();
+// 获取商品信息
 getGoodsInfo(route.params.id as string);
 
-// 获取商品信息
 // 用户选择的商品数量
 const count = ref(1);
 
 // onBeforeRouteUpdate(to => {
 //   console.log(666);
 // })
+
+// 将商品加入购物车
+async function addProductToCart() {
+  // console.log(skuId.value, count.value);
+  // 检查用户是否选择了完整的商品规格
+  if (typeof skuId.value !== 'undefined') {
+    try {
+      // 发送请求将商品加入购物车
+      await cart_store.addProductToCart(skuId.value, count.value);
+      // 提示用户加入购物车成功
+      $?.proxy?.$msg({ type: "success", msg: "加入购物车成功" });
+    } catch (error) {
+      console.log(error);
+      // 加入购物车失败的异常
+      if (error instanceof AxiosError) {
+        // token 验证失败的情况
+        if (error.response?.data.code === "10019") {
+          $?.proxy?.$msg({ type: "error", msg: `请登录` });
+        }
+      }
+    }
+  } else {
+    $?.proxy?.$msg({ type: "error", msg: "请选择完整的商品规格" });
+  }
+}
 </script>
   
 <style scoped lang="less">

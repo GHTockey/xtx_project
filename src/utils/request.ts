@@ -16,8 +16,8 @@ export default class XtxRequestManager {
     private _userStore = useUserStore()
     readonly _instance: AxiosInstance // axios 实例
     private static _singletonInstance: XtxRequestManager // 类的单例
-    // static baseURL: string = "https://pcapi-xiaotuxian-front-devtest.itheima.net"
-    static baseURL: string = "https://apipc-xiaotuxian-front.itheima.net"
+    static baseURL: string = "https://pcapi-xiaotuxian-front-devtest.itheima.net"
+    // static baseURL: string = "https://apipc-xiaotuxian-front.itheima.net"
 
     private constructor() {
         // 请求基准地址
@@ -33,15 +33,22 @@ export default class XtxRequestManager {
         this._instance.interceptors.response.use((response: AxiosResponse) => {
             return response.data
         }, (err: AxiosError) => {
-            // console.log(err.response?.data,555);
+            console.log(err.response, 555);
             if (err.response?.status == 401) {
                 // 清空用户信息
                 this._userStore.$reset()
                 // 跳转登录页
-                router.push('login')
+                router.push('/login')
+                /**
+                 * 对于router.push('login')和router.push('/login')，
+                 * 区别在于前者是相对路径，后者是绝对路径。
+                 * 如果当前路径是'/home'，那么router.push('login')会跳转到'/home/login'，
+                 * 而router.push('/login')会跳转到'/login'。
+                 */
             } else {
-                throw Error(err.response?.data?.message || '未知的错误')
+                throw Error((err.response?.data as { message?: string })?.message || '未知的错误')
             }
+            return Promise.reject(err)
         })
     }
 

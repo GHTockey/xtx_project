@@ -6,7 +6,7 @@ export class AuthAPI {
    // 账号密码登录
    static loginByAccount(account: string, password: string) {
       return XtxRequestManager.createInstance.request<Response<User>>({
-         url: "http://pcapi-xiaotuxian-front-devtest.itheima.net/login",
+         url: "/login",
          method: "post",
          data: { account, password },
       });
@@ -38,7 +38,6 @@ export class AuthAPI {
    static sendMsgCodeOfBindQQ(mobile: string, unionId: string, source: number) {
       return XtxRequestManager.createInstance.request<Response<null>>({
          url: "/login/social/code",
-         method: "get",
          params: { mobile, unionId, source },
       });
    };

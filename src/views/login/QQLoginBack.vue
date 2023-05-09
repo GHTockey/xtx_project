@@ -27,7 +27,7 @@ if (Login.check()) {
       userStore.login(() => AuthAPI.loginByQQOpenid(openid, 1))
    })
 } else {
-   // router.push('/')
+   router.push('/')
 };
 
 // 监听登录状态 (绑定已有账号登录、绑定新注册账号登录)
