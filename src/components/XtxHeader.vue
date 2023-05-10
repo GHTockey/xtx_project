@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import XtxHeaderNav from './XtxHeaderNav.vue';
+import XtxHeaderCart from "./XtxHeaderCart.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 </script>
 <!-- 头部组件 src/components/XtxHeader.vue -->
 <template>
@@ -13,11 +17,7 @@ import XtxHeaderNav from './XtxHeaderNav.vue';
 				<i class="iconfont icon-search"></i>
 				<input type="text" placeholder="搜一搜" />
 			</div>
-			<div class="cart">
-				<a class="curr" href="#">
-					<i class="iconfont icon-cart"></i><em>2</em>
-				</a>
-			</div>
+			<XtxHeaderCart v-if="route.path !== '/'" />
 		</div>
 	</header>
 </template>

@@ -8,12 +8,13 @@ import MessageLogin from "./MessageLogin.vue";
 const accountLogin = ref(true);
 
 import { useUserStore } from "@/stores/userStore";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 const userStore = useUserStore();
 // 获取组件实例 getCurrentInstance() 是 Vue 3 中引入的一个新函数，它允许您在 setup 函数或生命周期钩子中访问当前的 Vue 实例。
 const $ = getCurrentInstance();
 // 获取路由对象
 const router = useRouter();
+const route = useRoute();
 
 // 监听登录状态
 watch(
@@ -21,10 +22,16 @@ watch(
     (status) => {
         // 如果登录成功
         if (status === "success") {
+            console.log(typeof route.query.return);
             // 消息提示
             $?.proxy?.$msg({ type: "success", msg: "登录成功" });
-            // 跳转到首页
-            router.push("/");
+            if (typeof route.query.return !== 'undefined') {
+                // 跳转到登录前的页面
+                router.push(route.query.return as string);
+            } else {
+                // 跳转到首页
+                router.push("/");
+            }
         } else if (status === "error") {
             // 如果登录失败
             $?.proxy?.$msg({ type: "error", msg: userStore.profile.error });

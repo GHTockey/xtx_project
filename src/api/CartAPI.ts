@@ -10,5 +10,11 @@ export class CartAPI {
          method: "post",
          data: { skuId, count },
       });
+   };
+   /** 获取购物车商品列表API */
+   static getCarts() {
+      return XtxRequestManager.createInstance.request<Response<Cart[]>>({
+         url: "/member/cart",
+      });
    }
 }

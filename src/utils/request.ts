@@ -33,12 +33,13 @@ export default class XtxRequestManager {
         this._instance.interceptors.response.use((response: AxiosResponse) => {
             return response.data
         }, (err: AxiosError) => {
-            console.log(err.response, 555);
+            // console.log(err.response, 555);
             if (err.response?.status == 401) {
                 // 清空用户信息
                 this._userStore.$reset()
                 // 跳转登录页
-                router.push('/login')
+                // console.log(router.currentRoute.value.fullPath);
+                router.push(`/login?return=${encodeURIComponent(router.currentRoute.value.fullPath)}`)
                 /**
                  * 对于router.push('login')和router.push('/login')，
                  * 区别在于前者是相对路径，后者是绝对路径。
