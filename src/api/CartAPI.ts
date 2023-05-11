@@ -16,5 +16,13 @@ export class CartAPI {
       return XtxRequestManager.createInstance.request<Response<Cart[]>>({
          url: "/member/cart",
       });
+   };
+   /** 删除购物车中的商品API */
+   static removeGoodsOfCart(args: { ids?: string[]; clearAll?: boolean; clearInvalid?: boolean }) {
+      return XtxRequestManager.createInstance.request<Response<boolean>>({
+         url: "/member/cart",
+         method: "delete",
+         data: args,
+      });
    }
 }

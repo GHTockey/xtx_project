@@ -17,15 +17,18 @@ type Actions = {
    addProductToCart(sid: string, count: number): Promise<Cart>;
    /** 获取购物车列表Handler */
    getCarts(): Promise<void>;
+   /** 删除购物车商品Handler */
+   removeGoodsOfCart(args: {
+      ids?: string[]; // 要删除的商品id
+      clearAll?: boolean; // 是否清空
+      clearInvalid?: boolean; // 是否清空失效商品
+   }): Promise<void>;
 };
 
 export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('cart_store', {
    state() {
       return {
-         carts: {
-            result: [],
-            status: 'idle'
-         }
+         carts: { result: [], status: 'idle' }
       }
    },
    getters: {
@@ -53,6 +56,16 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
             this.carts.status = 'success';
          } catch (error) {
             this.carts.status = 'error';
+         }
+      },
+      async removeGoodsOfCart(args) {
+         let res = await CartAPI.removeGoodsOfCart(args);
+         // console.log(res,'res');
+         // 如果删除成功，重新获取购物车列表
+         if (res.result) {
+            this.getCarts()
+         } else {
+            throw new Error('删除购物车商品失败')
          }
       }
    },

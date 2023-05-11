@@ -6,7 +6,7 @@
       </RouterLink>
       <div class="layer">
          <div class="list">
-            <div class="item" v-for="item, i in cart_store.carts.result" :key="i">
+            <div class="item" v-for="item, i in cart_store.carts.result" :key="item.id">
                <RouterLink to="">
                   <img :src="item.picture" />
                   <div class="center">
@@ -18,7 +18,8 @@
                      <p class="count">x{{ item.count }}</p>
                   </div>
                </RouterLink>
-               <i class="iconfont icon-close-new"></i>
+               <!-- 删除按钮 -->
+               <i class="iconfont icon-close-new" @click="deleteCartGoods(item.id)"></i>
             </div>
          </div>
          <div class="foot">
@@ -39,10 +40,12 @@ import XtxButton from "./XtxButton.vue";
 import { useCartStore } from "@/stores/cartStore";
 import { useUserStore } from "@/stores/userStore";
 import { useRoute } from "vue-router";
+import { getCurrentInstance } from "vue";
 
 const route = useRoute();
 const cart_store = useCartStore();
 const user_store = useUserStore();
+const $ = getCurrentInstance();
 
 // 如果是首页
 if (route.path === '/') {
@@ -50,7 +53,23 @@ if (route.path === '/') {
    if (user_store.profile.status === 'success') cart_store.getCarts(); // 获取购物车数据
 } else {
    cart_store.getCarts(); // 不是首页, 获取购物车数据
-}
+};
+
+// 删除购物车商品
+function deleteCartGoods(id: string) {
+   $?.proxy?.$confirm({
+      'content': '确定要删除该商品吗?',
+      'sure': async () => {
+         try {
+            await cart_store.removeGoodsOfCart({ ids: [id], clearAll: false, clearInvalid: false })
+            $?.proxy?.$msg({ type: 'success', msg: '删除成功' }) // 提示删除成功
+         } catch (error) {
+            console.log(error);
+            $?.proxy?.$msg({ type: 'error', msg: '删除失败' }) // 提示删除失败
+         }
+      }
+   })
+};
 </script>
  
 <style scoped lang="less">

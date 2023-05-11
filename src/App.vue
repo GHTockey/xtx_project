@@ -14,6 +14,12 @@
 
 // const isAgree = ref(false);
 
+// function sss() {
+//   console.log('点了确定');
+// }
+// function ccc() {
+//   console.log('点了取消');
+// }
 </script>
 
 <style scoped lang="less"></style>
