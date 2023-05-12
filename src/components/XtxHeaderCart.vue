@@ -19,7 +19,7 @@
                   </div>
                </RouterLink>
                <!-- 删除按钮 -->
-               <i class="iconfont icon-close-new" @click="deleteCartGoods(item.id)"></i>
+               <i class="iconfont icon-close-new" @click="deleteCartGoods(item.skuId)"></i>
             </div>
          </div>
          <div class="foot">
@@ -56,12 +56,12 @@ if (route.path === '/') {
 };
 
 // 删除购物车商品
-async function deleteCartGoods(id: string) {
+async function deleteCartGoods(skuId: string) {
    try {
       // 如果点了取消则会抛出异常提示取消删除
       await $?.proxy?.$confirm({ 'content': '确定要删除该商品吗?' })
       try {
-         await cart_store.removeGoodsOfCart({ ids: [id], clearAll: false, clearInvalid: false })
+         await cart_store.removeGoodsOfCart({ ids: [skuId], clearAll: false, clearInvalid: false })
          $?.proxy?.$msg({ type: 'success', msg: '删除成功' }) // 提示删除成功
       } catch (error) {
          console.log(error);

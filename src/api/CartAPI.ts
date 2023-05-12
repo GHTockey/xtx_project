@@ -24,5 +24,21 @@ export class CartAPI {
          method: "delete",
          data: args,
       });
+   };
+   /** 修改购物车商品信息API */
+   static alterCartGoods(args: { id: string; selected?: boolean; count?: number; }) {
+      return XtxRequestManager.createInstance.request<Response<Cart>>({
+         url: `/member/cart/${args.id}`,
+         method: "put",
+         data: args,
+      });
+   };
+   /** 全选、取消全选API */
+   static selecteAndDeselect(selected: boolean) {
+      return XtxRequestManager.createInstance.request<Response<null>>({
+         url: "/member/cart/selected",
+         method: "put",
+         data: { selected },
+      });
    }
 }

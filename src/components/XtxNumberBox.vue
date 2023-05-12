@@ -39,6 +39,7 @@ function onChange(step: 1 | -1) {
     }
 }
 </script>
+
 <style scoped lang="less">
 .xtx-number-box {
     display: flex;

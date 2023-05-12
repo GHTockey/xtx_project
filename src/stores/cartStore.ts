@@ -19,6 +19,8 @@ type Getter = {
    userSelectGoodsAmount(): number
    /** 无效商品列表 */
    invalidCartList(): Cart[];
+   /** 是否全部选中 */
+   isAllSelected(): boolean;
 };
 type Actions = {
    /** 将商品加入购物车Handler */
@@ -31,6 +33,14 @@ type Actions = {
       clearAll?: boolean; // 是否清空
       clearInvalid?: boolean; // 是否清空失效商品
    }): Promise<void>;
+   /** 修改商品信息Handler */
+   alterCartGoods(args: {
+      id: string; // 要修改的商品id
+      selected?: boolean; // 是否选中
+      count?: number; // 数量
+   }): Promise<Cart>;
+   /** 全选、取消全选Handler */
+   selecteAndDeselect(selected: boolean): Promise<void>;
 };
 
 export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('cart_store', {
@@ -40,13 +50,6 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
       }
    },
    getters: {
-      // effectiveCartAmount() {
-      //    // 保留两位小数
-      //    return parseFloat(this.carts.result.reduce((totalPrice, item) => (totalPrice += parseFloat(item.nowPrice)), 0).toFixed(2))
-      // },
-      // cartGoodsCount() {
-      //    return this.carts.result.reduce((sum, item) => (sum += item.count), 0)
-      // },
       effectiveCartList() { // 库存 stock 大于 0
          return this.carts.result.filter(item => item.isEffective && item.stock)
       },
@@ -72,6 +75,10 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
       invalidCartList() {
          return this.carts.result.filter(item => !item.isEffective || !item.stock)
       },
+      isAllSelected() {
+         if (this.userSelectGoodsList.length === 0) return false
+         return this.userSelectGoodsList.length === this.effectiveCartList.length
+      }
 
    },
    actions: {
@@ -96,10 +103,24 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
          let res = await CartAPI.removeGoodsOfCart(args);
          // console.log(res,'res');
          // 如果删除成功，重新获取购物车列表
-         if (res.result) {
+         if (res.result !== false) {
             this.getCarts()
          } else {
             throw new Error('删除购物车商品失败')
+         }
+      },
+      async alterCartGoods(args) {
+         const res = await CartAPI.alterCartGoods(args); // 发送修改请求
+         this.getCarts(); // 更新购物车列表
+         return res.result; // 返回修改后的商品信息
+      },
+      async selecteAndDeselect(selected) {
+         try {
+            await CartAPI.selecteAndDeselect(selected)
+            this.getCarts()
+            console.log(222);
+         } catch (error) {
+
          }
       }
    },

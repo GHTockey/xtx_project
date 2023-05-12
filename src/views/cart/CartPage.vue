@@ -10,7 +10,7 @@
                <thead>
                   <tr>
                      <th>
-                        <XtxCheckbox>全选</XtxCheckbox>
+                        <XtxCheckbox :model-value="cartStore.isAllSelected">全选</XtxCheckbox>
                      </th>
                      <th>商品信息</th>
                      <th>单价</th>
@@ -23,11 +23,13 @@
                <tbody>
                   <tr v-for="item in cartStore.effectiveCartList" :key="item.id">
                      <td>
-                        <XtxCheckbox />
+                        <XtxCheckbox :model-value="item.selected" @update:model-value="cartStore.alterCartGoods({
+                           id: item.skuId, selected: !item.selected, count: item.count
+                        })" />
                      </td>
                      <td>
                         <div class="goods">
-                           <RouterLink to="/"><img :src="item.picture" alt="" />
+                           <RouterLink :to="`/goods/${item.id}`"><img :src="item.picture" />
                            </RouterLink>
                            <div>
                               <p class="name ellipsis">{{ item.name }}</p>
@@ -41,8 +43,10 @@
                         <p>比加入时降价 <span class="red">&yen;{{ +item.price - +item.nowPrice }}</span></p>
                      </td>
                      <td class="tc">
-                        {{ item.count }}
-                        <!-- <XtxNumberBox /> -->
+                        <!-- {{ item.count }} -->
+                        <XtxNumberBox :max="item.stock" :count="item.count" label="" @update:count="cartStore.alterCartGoods({
+                           id: item.skuId, count: $event
+                        })" />
                      </td>
                      <td class="tc">
                         <p class="f16 red">&yen;{{ parseFloat(String(+item.nowPrice * item.count)).toFixed(2) }}</p>
@@ -65,8 +69,7 @@
                      <td></td>
                      <td>
                         <div class="goods">
-                           <RouterLink to="/"><img
-                                 :src="item.picture" />
+                           <RouterLink to="/"><img :src="item.picture" />
                            </RouterLink>
                            <div>
                               <p class="name ellipsis">{{ item.name }}</p>
@@ -92,7 +95,7 @@
          <!-- 操作栏 -->
          <div class="action">
             <div class="batch">
-               <XtxCheckbox>全选</XtxCheckbox>
+               <XtxCheckbox :model-value="cartStore.isAllSelected" @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
                <a href="javascript:">删除商品</a>
                <a href="javascript:">移入收藏夹</a>
                <a href="javascript:">清空失效商品</a>
@@ -118,6 +121,7 @@ import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import XtxCheckbox from "@/components/XtxCheckbox.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import GoodsRelevant from "@/views/goods/components/GoodsRelevant.vue";
+import XtxNumberBox from "@/components/XtxNumberBox.vue";
 import { useCartStore } from "@/stores/cartStore";
 
 const cartStore = useCartStore();
