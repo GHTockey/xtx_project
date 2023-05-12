@@ -1,7 +1,9 @@
 <!-- src/components/XtxConfirm.vue -->
 <script setup lang="ts">
 import XtxButton from "@/components/XtxButton.vue";
-import type { callback } from "./library/Confirm";
+// import type { callback } from "./library/Confirm";
+
+export type callback = (value?: unknown) => void;
 
 withDefaults(
    defineProps<{

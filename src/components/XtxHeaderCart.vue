@@ -1,6 +1,6 @@
 <!-- src/components/XtxHeaderCart.vue -->
 <template>
-   <div class="cart">
+   <div class="cart" v-if="!(route.path === '/cart')">
       <RouterLink to="/cart" class="curr">
          <i class="iconfont icon-cart"></i><em>{{ cart_store.effectiveCartCount }}</em>
       </RouterLink>
@@ -25,7 +25,7 @@
          <div class="foot">
             <div class="total">
                <p>共 {{ cart_store.effectiveCartCount }} 件商品</p>
-               <p>&yen;{{ cart_store.effectiveCartAmount }}</p>
+               <p>&yen;{{ cart_store.userSelectGoodsAmount }}</p>
             </div>
             <XtxButton type="plain">
                <RouterLink to="/cart">去购物车结算</RouterLink>
@@ -56,19 +56,20 @@ if (route.path === '/') {
 };
 
 // 删除购物车商品
-function deleteCartGoods(id: string) {
-   $?.proxy?.$confirm({
-      'content': '确定要删除该商品吗?',
-      'sure': async () => {
-         try {
-            await cart_store.removeGoodsOfCart({ ids: [id], clearAll: false, clearInvalid: false })
-            $?.proxy?.$msg({ type: 'success', msg: '删除成功' }) // 提示删除成功
-         } catch (error) {
-            console.log(error);
-            $?.proxy?.$msg({ type: 'error', msg: '删除失败' }) // 提示删除失败
-         }
+async function deleteCartGoods(id: string) {
+   try {
+      // 如果点了取消则会抛出异常提示取消删除
+      await $?.proxy?.$confirm({ 'content': '确定要删除该商品吗?' })
+      try {
+         await cart_store.removeGoodsOfCart({ ids: [id], clearAll: false, clearInvalid: false })
+         $?.proxy?.$msg({ type: 'success', msg: '删除成功' }) // 提示删除成功
+      } catch (error) {
+         console.log(error);
+         $?.proxy?.$msg({ type: 'error', msg: '删除失败' }) // 提示删除失败
       }
-   })
+   } catch (error) {
+      $?.proxy?.$msg({ type: "warn", msg: '取消删除' })
+   }
 };
 </script>
  

@@ -7,10 +7,18 @@ type State = {
    carts: { result: Cart[], status: Status };
 };
 type Getter = {
-   /** 购物车商品总数 */
+   /** 有效商品列表 */
+   effectiveCartList(): Cart[];
+   /** 有效商品数量 */
    effectiveCartCount(): number;
-   /** 购物车商品总价 */
-   effectiveCartAmount(): number;
+   /** 用户选择的商品列表 */
+   userSelectGoodsList(): Cart[]
+   /** 用户选择的商品总数 */
+   userSelectGoodsCount(): number
+   /** 用户选择的商品总价 */
+   userSelectGoodsAmount(): number
+   /** 无效商品列表 */
+   invalidCartList(): Cart[];
 };
 type Actions = {
    /** 将商品加入购物车Handler */
@@ -32,13 +40,39 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
       }
    },
    getters: {
-      effectiveCartAmount() {
-         // 保留两位小数
-         return parseFloat(this.carts.result.reduce((totalPrice, item) => (totalPrice += parseFloat(item.nowPrice)), 0).toFixed(2))
+      // effectiveCartAmount() {
+      //    // 保留两位小数
+      //    return parseFloat(this.carts.result.reduce((totalPrice, item) => (totalPrice += parseFloat(item.nowPrice)), 0).toFixed(2))
+      // },
+      // cartGoodsCount() {
+      //    return this.carts.result.reduce((sum, item) => (sum += item.count), 0)
+      // },
+      effectiveCartList() { // 库存 stock 大于 0
+         return this.carts.result.filter(item => item.isEffective && item.stock)
       },
       effectiveCartCount() {
-         return this.carts.result.reduce((totalCount, item) => (totalCount += item.count), 0)
-      }
+         return this.effectiveCartList.reduce((sum, item) => (sum += item.count), 0)
+      },
+      userSelectGoodsList() {
+         return this.effectiveCartList.filter((item) => item.selected)
+      },
+      userSelectGoodsCount() {
+         return this.effectiveCartList.reduce((sum, item) => {
+            if (item.selected) sum += item.count
+            return sum
+         }, 0)
+      },
+      userSelectGoodsAmount() {
+         return this.effectiveCartList.reduce((sum, item) => {
+            if (item.selected) sum += (parseFloat(item.nowPrice) * item.count)
+            // sum 只保留两位小数
+            return parseFloat(sum.toFixed(2))
+         }, 0)
+      },
+      invalidCartList() {
+         return this.carts.result.filter(item => !item.isEffective || !item.stock)
+      },
+
    },
    actions: {
       async addProductToCart(sid, count) {

@@ -16,6 +16,7 @@ const router = createRouter({
         { path: 'category/:id', name: "一级分类", component: () => import('@/views/category/TopCategoryPage.vue') },
         { path: 'category/sub/:id/:sid', name: "二级分类", component: () => import('@/views/category/SubCategoryPage.vue') },
         { path: 'goods/:id', name: '商品详情', component: () => import('@/views/goods/GoodsDetailPage.vue') },
+        { path: 'cart', name: '购物车', component: () => import('@/views/cart/CartPage.vue') },
       ]
     },
     { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },
