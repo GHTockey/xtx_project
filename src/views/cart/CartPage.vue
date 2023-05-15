@@ -10,8 +10,8 @@
                <thead>
                   <tr>
                      <th>
-                        <XtxCheckbox :model-value="cartStore.isAllSelected"
-                           @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
+                        <XtxCheckbox :model-value="cart_store.isAllSelected"
+                           @update:model-value="cart_store.selecteAndDeselect(!cart_store.isAllSelected)">全选</XtxCheckbox>
                      </th>
                      <th>商品信息</th>
                      <th>单价</th>
@@ -22,9 +22,9 @@
                </thead>
                <!-- 有效商品 -->
                <tbody>
-                  <tr v-for="item in cartStore.effectiveCartList" :key="item.id">
+                  <tr v-for="item in cart_store.effectiveCartList" :key="item.id">
                      <td>
-                        <XtxCheckbox :model-value="item.selected" @update:model-value="cartStore.alterCartGoods({
+                        <XtxCheckbox :model-value="item.selected" @update:model-value="cart_store.alterCartGoods({
                            id: item.skuId, selected: !item.selected, count: item.count
                         })" />
                      </td>
@@ -45,7 +45,7 @@
                      </td>
                      <td class="tc">
                         <!-- {{ item.count }} -->
-                        <XtxNumberBox :max="item.stock" :count="item.count" label="" @update:count="cartStore.alterCartGoods({
+                        <XtxNumberBox :max="item.stock" :count="item.count" label="" @update:count="cart_store.alterCartGoods({
                            id: item.skuId, count: $event
                         })" />
                      </td>
@@ -60,13 +60,13 @@
                   </tr>
                </tbody>
                <!-- 无效商品 -->
-               <tbody v-if="cartStore.invalidCartList.length >= 1">
+               <tbody v-if="cart_store.invalidCartList.length >= 1">
                   <tr>
                      <td colspan="6">
                         <h3 class="tit">失效商品</h3>
                      </td>
                   </tr>
-                  <tr v-for="item in cartStore.invalidCartList" :key="item.id">
+                  <tr v-for="item in cart_store.invalidCartList" :key="item.id">
                      <td></td>
                      <td>
                         <div class="goods">
@@ -96,16 +96,16 @@
          <!-- 操作栏 -->
          <div class="action">
             <div class="batch">
-               <XtxCheckbox :model-value="cartStore.isAllSelected"
-                  @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
-               <a href="javascript:">删除商品</a>
+               <XtxCheckbox :model-value="cart_store.isAllSelected"
+                  @update:model-value="cart_store.selecteAndDeselect(!cart_store.isAllSelected)">全选</XtxCheckbox>
+               <a href="javascript:" @click="batchDelete">删除商品</a>
                <a href="javascript:">移入收藏夹</a>
                <a href="javascript:">清空失效商品</a>
             </div>
             <div class="total">
-               共 {{ cartStore.effectiveCartCount }} 件商品，
-               已选择 {{ cartStore.userSelectGoodsCount }} 件，商品合计：
-               <span class="red">¥{{ cartStore.userSelectGoodsAmount }}</span>
+               共 {{ cart_store.effectiveCartCount }} 件商品，
+               已选择 {{ cart_store.userSelectGoodsCount }} 件，商品合计：
+               <span class="red">¥{{ cart_store.userSelectGoodsAmount }}</span>
                <XtxButton type="primary">
                   <XtxButton to="/checkout/order" type="primary">下单结算</XtxButton>
                </XtxButton>
@@ -128,7 +128,7 @@ import CartSku from "./components/CartSku.vue";
 import { useCartStore } from "@/stores/cartStore";
 import { getCurrentInstance } from "vue";
 
-const cartStore = useCartStore();
+const cart_store = useCartStore();
 const $ = getCurrentInstance();
 
 // 删除商品
@@ -136,7 +136,7 @@ async function deleteGoods(skuId: string) {
    try {
       await $?.proxy?.$confirm({ content: '确定删除吗?' })
       try {
-         await cartStore.removeGoodsOfCart({ ids: [skuId] })
+         await cart_store.removeGoodsOfCart({ ids: [skuId] })
          $?.proxy?.$msg({ 'msg': '删除成功', 'type': 'success' })
       } catch (error) {
          $?.proxy?.$msg({ 'msg': '删除失败,' + error, 'type': 'error' })
@@ -144,7 +144,23 @@ async function deleteGoods(skuId: string) {
    } catch (error) {
       $?.proxy?.$msg({ 'msg': '取消删除', 'type': 'warn' })
    }
-}
+};
+// 批量删除
+async function batchDelete() {
+   try {
+      let ids = cart_store.carts.result.map(item => {
+         if (item.selected) return item.skuId
+      }).filter(item => item != undefined)
+      if (ids.length == 0) {
+         $?.proxy?.$msg({ 'msg': '请选择要删除的商品', 'type': 'warn' })
+         return
+      }
+      await $?.proxy?.$confirm({ content: `确定删除这 ${ids.length} 件吗?` })
+      await cart_store.removeGoodsOfCart({ ids: <string[]>ids })
+   } catch (error) {
+
+   }
+};
 </script>
  
 <style scoped lang="less">
