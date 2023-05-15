@@ -10,7 +10,8 @@
                <thead>
                   <tr>
                      <th>
-                        <XtxCheckbox :model-value="cartStore.isAllSelected">全选</XtxCheckbox>
+                        <XtxCheckbox :model-value="cartStore.isAllSelected"
+                           @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
                      </th>
                      <th>商品信息</th>
                      <th>单价</th>
@@ -34,7 +35,7 @@
                            <div>
                               <p class="name ellipsis">{{ item.name }}</p>
                               <!-- 购物车选择规格组件 -->
-                              <!-- <CartSku /> -->
+                              <CartSku :sku-id="item.skuId" :attrs-text="item.attrsText" />
                            </div>
                         </div>
                      </td>
@@ -53,7 +54,7 @@
                      </td>
                      <td class="tc">
                         <p><a href="javascript:">移入收藏夹</a></p>
-                        <p><a class="green" href="javascript:">删除</a></p>
+                        <p><a class="green" href="javascript:" @click="deleteGoods(item.skuId)">删除</a></p>
                         <p><a href="javascript:">找相似</a></p>
                      </td>
                   </tr>
@@ -95,7 +96,8 @@
          <!-- 操作栏 -->
          <div class="action">
             <div class="batch">
-               <XtxCheckbox :model-value="cartStore.isAllSelected" @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
+               <XtxCheckbox :model-value="cartStore.isAllSelected"
+                  @update:model-value="cartStore.selecteAndDeselect(!cartStore.isAllSelected)">全选</XtxCheckbox>
                <a href="javascript:">删除商品</a>
                <a href="javascript:">移入收藏夹</a>
                <a href="javascript:">清空失效商品</a>
@@ -122,9 +124,27 @@ import XtxCheckbox from "@/components/XtxCheckbox.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import GoodsRelevant from "@/views/goods/components/GoodsRelevant.vue";
 import XtxNumberBox from "@/components/XtxNumberBox.vue";
+import CartSku from "./components/CartSku.vue";
 import { useCartStore } from "@/stores/cartStore";
+import { getCurrentInstance } from "vue";
 
 const cartStore = useCartStore();
+const $ = getCurrentInstance();
+
+// 删除商品
+async function deleteGoods(skuId: string) {
+   try {
+      await $?.proxy?.$confirm({ content: '确定删除吗?' })
+      try {
+         await cartStore.removeGoodsOfCart({ ids: [skuId] })
+         $?.proxy?.$msg({ 'msg': '删除成功', 'type': 'success' })
+      } catch (error) {
+         $?.proxy?.$msg({ 'msg': '删除失败,' + error, 'type': 'error' })
+      }
+   } catch (error) {
+      $?.proxy?.$msg({ 'msg': '取消删除', 'type': 'warn' })
+   }
+}
 </script>
  
 <style scoped lang="less">

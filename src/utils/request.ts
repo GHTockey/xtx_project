@@ -16,8 +16,8 @@ export default class XtxRequestManager {
     private _userStore = useUserStore()
     readonly _instance: AxiosInstance // axios 实例
     private static _singletonInstance: XtxRequestManager // 类的单例
-    // static baseURL: string = "https://pcapi-xiaotuxian-front-devtest.itheima.net"
-    static baseURL: string = "https://apipc-xiaotuxian-front.itheima.net"
+    static baseURL: string = "https://pcapi-xiaotuxian-front-devtest.itheima.net"
+    // static baseURL: string = "https://apipc-xiaotuxian-front.itheima.net"
 
     private constructor() {
         // 请求基准地址

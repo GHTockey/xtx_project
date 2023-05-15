@@ -41,6 +41,8 @@ type Actions = {
    }): Promise<Cart>;
    /** 全选、取消全选Handler */
    selecteAndDeselect(selected: boolean): Promise<void>;
+   /** 修改商品规格Handler */
+   alterSku(oldSkuId: string, newSkuid: string): Promise<void>
 };
 
 export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('cart_store', {
@@ -118,10 +120,23 @@ export const useCartStore = defineStore<'cart_store', State, Getter, Actions>('c
          try {
             await CartAPI.selecteAndDeselect(selected)
             this.getCarts()
-            console.log(222);
          } catch (error) {
 
          }
+      },
+      async alterSku(oldSkuId: string, newSkuId: string) {
+         // 根据旧商品的 skuId 查找旧的商品
+         const oldGoods = this.carts.result.find(
+            (item) => item.skuId === oldSkuId
+         );
+         // 如果找到了旧的商品
+         if (typeof oldGoods == "undefined") return;
+         // 从旧的商品中获取商品数量
+         const goodsCount = oldGoods.count;
+         // 删除旧商品
+         await this.removeGoodsOfCart({ ids: [oldSkuId] });
+         // 添加新商品ait this.addProductToCart(newSkuId, goodsCount);
+         await this.addProductToCart(newSkuId, goodsCount);
       }
    },
 })

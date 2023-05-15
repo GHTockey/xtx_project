@@ -1,4 +1,5 @@
 import type { Cart } from "@/types/Cart";
+import type { Sku, Spec } from "@/types/Goods";
 import type { Response } from "@/types/Res";
 import XtxRequestManager from "@/utils/request";
 
@@ -39,6 +40,14 @@ export class CartAPI {
          url: "/member/cart/selected",
          method: "put",
          data: { selected },
+      });
+   };
+   // 获取商品规格信息 id -> skuid
+   static getSkuInfo(id: string) {
+      return XtxRequestManager.createInstance.request<Response<
+         { specs: Spec[]; skus: Sku[] }
+      >>({
+         url: `/goods/sku/${id}`,
       });
    }
 }
