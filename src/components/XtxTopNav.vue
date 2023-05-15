@@ -22,16 +22,21 @@
 
 <script lang="ts" setup>
 import { useUserStore } from "@/stores/userStore";
+import { useCartStore } from "@/stores/cartStore";
 import { storeToRefs } from "pinia";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const user_store = useUserStore();
+const cart_store = useCartStore();
 const { profile } = storeToRefs(user_store);
 
 function logout() {
     user_store.$reset()
     router.push('/')
+
+    // 清空购物车信息
+    cart_store.$reset()
 }
 </script>
   

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
-
+import authGuard from "./authGuard";
 
 const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL), // 黑丝的瑞
@@ -25,3 +25,5 @@ const router = createRouter({
 })
 
 export default router
+
+router.beforeEach(authGuard);
