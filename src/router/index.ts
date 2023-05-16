@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
 import authGuard from "./authGuard";
 
 const router = createRouter({
@@ -17,13 +17,14 @@ const router = createRouter({
         { path: 'category/sub/:id/:sid', name: "二级分类", component: () => import('@/views/category/SubCategoryPage.vue') },
         { path: 'goods/:id', name: '商品详情', component: () => import('@/views/goods/GoodsDetailPage.vue') },
         { path: 'cart', name: '购物车', component: () => import('@/views/cart/CartPage.vue') },
+        { path: 'checkout/order', name: '订单页', component: () => import('@/views/pay/CheckoutPage.vue') },
       ]
     },
     { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },
     { path: '/login/callback', name: "联合登录页", component: () => import('@/views/login/QQLoginBack.vue') }
   ]
-})
+});
 
-export default router
 
 router.beforeEach(authGuard);
+export default router;

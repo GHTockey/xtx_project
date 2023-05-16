@@ -2,12 +2,18 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
+// import vueJsx from '@vitejs/plugin-vue-jsx'
 import { join } from 'node:path'
+
+import vueDevtools from 'vite-plugin-vue-devtools';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(),
+    // vueJsx(),
+    vueDevtools()
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -15,7 +21,13 @@ export default defineConfig({
   },
   // 配置端口
   server: {
-    port: 8080
+    port: 8080,
+    // proxy: {
+    //   '*': {
+    //     target: 'https://pcapi-xiaotuxian-front-devtest.itheima.net',
+    //     changeOrigin: true,
+    //   }
+    // }
   },
 
   // 配置 css 预处理器
