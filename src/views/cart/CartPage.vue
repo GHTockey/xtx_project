@@ -30,7 +30,7 @@
                      </td>
                      <td>
                         <div class="goods">
-                           <RouterLink :to="`/goods/${item.id}`">``<img :src="item.picture" />
+                           <RouterLink :to="`/goods/${item.id}`"><img :src="item.picture" />
                            </RouterLink>
                            <div>
                               <p class="name ellipsis">{{ item.name }}</p>

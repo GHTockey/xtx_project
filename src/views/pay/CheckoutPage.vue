@@ -3,16 +3,28 @@
 import XtxBread from "@/components/XtxBread.vue";
 import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import XtxButton from "@/components/XtxButton.vue";
+// import XtxDialog from "@/components/XtxDialog.vue";
 import { useOrderStore } from "@/stores/orderStore";
+import { ref } from "vue";
 
 const order_store = useOrderStore();
 
 order_store.createOrder()
 
+const tf = ref(true)
 </script>
 
 <template>
    <div class="xtx-pay-checkout-page">
+
+      <!-- <XtxDialog title="添加收货地址" :visible="tf">
+         <template #body>对话框内容</template>
+         <template #footer>
+            <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
+            <XtxButton type="primary">确认</XtxButton>
+         </template>
+      </XtxDialog> -->
+
       <div class="container">
          <XtxBread>
             <XtxBreadItem path="/">首页</XtxBreadItem>
