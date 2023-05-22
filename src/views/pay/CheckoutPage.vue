@@ -4,24 +4,22 @@ import XtxBread from "@/components/XtxBread.vue";
 import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import XtxButton from "@/components/XtxButton.vue";
 // import XtxDialog from "@/components/XtxDialog.vue";
+import ReceivingAddress from "./components/ReceivingAddress.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { ref } from "vue";
 
 const order_store = useOrderStore();
-
 order_store.createOrder()
-
-const tf = ref(true)
 </script>
 
 <template>
    <div class="xtx-pay-checkout-page">
 
-      <!-- <XtxDialog title="添加收货地址" :visible="tf">
+      <!-- <XtxDialog title="添加收货地址" v-model:visible="tf">
          <template #body>对话框内容</template>
          <template #footer>
-            <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
-            <XtxButton type="primary">确认</XtxButton>
+            <XtxButton type="gray" style="margin-right: 20px" @click="tf=false">取消</XtxButton>
+            <XtxButton type="primary" @click="tf=false" >确认</XtxButton>
          </template>
       </XtxDialog> -->
 
@@ -35,25 +33,7 @@ const tf = ref(true)
             <!-- 收货地址 -->
             <h3 class="box-title">收货地址</h3>
             <div class="box-body">
-               <div class="address">
-                  <div class="text">
-                     <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
-                     <ul>
-                        <li>
-                           <span>收<i />货<i />人：</span>朱超
-                        </li>
-                        <li><span>联系方式：</span>132****2222</li>
-                        <li>
-                           <span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室
-                        </li>
-                     </ul>
-                     <a href="javascript:">修改地址</a>
-                  </div>
-                  <div class="action">
-                     <XtxButton class="btn">切换地址</XtxButton>
-                     <XtxButton class="btn">添加地址</XtxButton>
-                  </div>
-               </div>
+               <ReceivingAddress />
             </div>
             <!-- 商品信息 -->
             <h3 class="box-title">商品信息</h3>
@@ -99,7 +79,7 @@ const tf = ref(true)
             <div class="box-body">
                <a class="my-btn active" href="javascript:">在线支付</a>
                <a class="my-btn" href="javascript:">货到付款</a>
-               <span style="color: #999">货到付款需付5元手续费</span>
+               <span style="color: #999999">货到付款需付5元手续费</span>
             </div>
             <!-- 金额明细 -->
             <h3 class="box-title">金额明细</h3>
@@ -150,70 +130,6 @@ const tf = ref(true)
 
       .box-body {
          padding: 20px 0;
-      }
-   }
-}
-
-.address {
-   border: 1px solid #f5f5f5;
-   display: flex;
-   align-items: center;
-
-   .text {
-      flex: 1;
-      min-height: 90px;
-      display: flex;
-      align-items: center;
-
-      .none {
-         line-height: 90px;
-         color: #999;
-         text-align: center;
-         width: 100%;
-      }
-
-      >ul {
-         flex: 1;
-         padding: 20px;
-
-         li {
-            line-height: 30px;
-
-            span {
-               color: #999;
-               margin-right: 5px;
-
-               >i {
-                  width: 0.5em;
-                  display: inline-block;
-               }
-            }
-         }
-      }
-
-      >a {
-         color: @xtxColor;
-         width: 160px;
-         text-align: center;
-         height: 90px;
-         line-height: 90px;
-         border-right: 1px solid #f5f5f5;
-      }
-   }
-
-   .action {
-      width: 420px;
-      text-align: center;
-
-      .btn {
-         width: 140px;
-         height: 46px;
-         line-height: 44px;
-         font-size: 14px;
-
-         &:first-child {
-            margin-right: 10px;
-         }
       }
    }
 }

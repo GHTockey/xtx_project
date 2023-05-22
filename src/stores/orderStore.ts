@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { OrderAPI } from "@/api/OrderAPI";
 
-import type { OrderOfCreateResponse } from "@/types/Order";
+import type { Address, EditAdressObject, OrderOfCreateResponse } from "@/types/Order";
 import type { Status } from "@/types/Status";
 
 type State = {
@@ -10,11 +10,22 @@ type State = {
       result: OrderOfCreateResponse;
       status: Status;
    };
+   // 收货地址列表
+   address: {
+      result: Address[];
+      status: Status;
+   }
 };
 type Getters = {};
 type Actions = {
-   // 创建订单
+   /** 创建订单Handler */
    createOrder(): Promise<void>;
+   /** 添加收货地址Handler */
+   addAddress(address: EditAdressObject): Promise<string>;
+   /** 获取收货地址列表Handler */
+   getAddress(): Promise<void>;
+   /** 修改收货地址Handler */
+   updateAddress(address: EditAdressObject): Promise<string>;
 };
 
 
@@ -34,6 +45,10 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
                },
             },
             status: 'idle'
+         },
+         address: {
+            result: [],
+            status: 'idle'
          }
       }
    },
@@ -48,7 +63,31 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          } catch (error) {
             this.orderOfCreate.status = 'error'
          }
-      }
+      },
+      async addAddress(address) {
+         // 发送添加收货地址的请求
+         const response = await OrderAPI.addAddress(address);
+         // 返回新添加的收货地址 id
+         return response.result.id;
+      },
+      async getAddress() {
+         this.address.status = 'loading'
+         try {
+            let res = await OrderAPI.getAddress()
+            this.address.result = res.result
+            this.address.status = 'success'
+         } catch (error) {
+            this.address.status = 'error'
+         }
+      },
+      async updateAddress(address) {
+         // 获取要修改的收货地址的id和其他信息
+         const { id, ...rest } = address;
+         // 发送请求 修改收货地址
+         const response = await OrderAPI.updateAddress(id!, rest);
+         // 返回被修改的收货地址的 id
+         return response.result.id;
+      },
    },
    getters: {},
 })

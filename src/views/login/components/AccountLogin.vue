@@ -52,7 +52,7 @@ const validationSchema = toFormValidator(
             .regex(/^[a-zA-Z]\w{5,19}$/, "字母开头且6-20个字符"),
         password: zod
             .string({ required_error: "请输入密码" })
-            .regex(/^\w{6,24}$/, "密码是6-24个字符"),
+            .regex(/^[a-zA-Z0-9_@#!-]{6,24}$/, "密码是6-24个字符"),
         // isAgree: zod.literal(true, {
         //     errorMap: () => ({ message: "请勾选同意用户协议" }),
         // }),

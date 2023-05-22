@@ -38,3 +38,33 @@ export interface Summary {
    postFee: number;
    discountPrice: number;
 }
+
+// 添加/修改收货地址的请求参数
+export interface EditAdressObject {
+   // 修改时使用
+   id?: string;
+   // 修改时使用
+   fullLocation?: string;
+   receiver: string;
+   contact: string;
+   provinceCode: string;
+   cityCode: string;
+   countyCode: string;
+   address: string;
+   postalCode: string;
+   addressTags: string;
+   isDefault: boolean | number;
+ }
+
+ export interface Address {
+   id: string;
+   provinceCode: string;
+   cityCode: string;
+   countyCode: string;
+   address: string;
+   isDefault: number | boolean;
+   receiver: string;
+   contact: string;
+   fullLocation: string;
+   postalCode: string;
+ }
