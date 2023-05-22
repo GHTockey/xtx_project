@@ -55,7 +55,7 @@ function alterAddress() {
    addressEdit.value.visible = true;
 };
 function ttt() {
-   console.log(addressEdit);
+   // console.log(addressEdit);
    addressEdit.value.visible = true;
    addressEdit.value.formValues = {
       receiver: "",
@@ -81,6 +81,10 @@ const finalAddress = computed(() => {
    // 3. 返回用户列表中的第一个收货地址
    const firstInList = order_store.address.result[0];
    if (typeof firstInList !== "undefined") return firstInList;
+});
+
+defineExpose({
+   addressId: () => finalAddress.value?.id
 });
 </script>
  

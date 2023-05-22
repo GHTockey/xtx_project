@@ -6,10 +6,46 @@ import XtxButton from "@/components/XtxButton.vue";
 // import XtxDialog from "@/components/XtxDialog.vue";
 import ReceivingAddress from "./components/ReceivingAddress.vue";
 import { useOrderStore } from "@/stores/orderStore";
-import { ref } from "vue";
+import { ref, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
+import { useCartStore } from "@/stores/cartStore";
+import type { SubmitOrderObject } from "@/types/Order";
 
 const order_store = useOrderStore();
 order_store.createOrder()
+const $ = getCurrentInstance();
+const receivingAddressInstance = ref(); // 收货地址组件实例对象
+const router = useRouter(); // 路由实例对象
+const cart_store = useCartStore();
+
+// 提交订单
+async function submitOrder() {
+   // 订单对象
+   const order: SubmitOrderObject = {
+      // 商品集合
+      goods: order_store.orderOfCreate.result.goods.map((item) => ({
+         skuId: item.skuId,
+         count: item.count,
+      })),
+      addressId: receivingAddressInstance.value.addressId(),      // 收货地址 id
+      deliveryTimeType: 1,    // 配送时间 1 不限
+      payType: 1,      // 支付方式 1 支付宝
+      payChannel: 1,      // 支付渠道 1 为在线支付
+      buyerMessage: "",      // 买家留言
+   };
+   // 判断用户是否选择了收货地址
+   if (!order.addressId) return $?.proxy?.$msg({ type: "warn", msg: "请选择收货地址" });
+   try {
+      // 发送请求 提交订单
+      const response = await order_store.submitOrder(order);
+      // 订单提交后, 重新获取购物车状态
+      cart_store.getCarts();
+      // 跳转到支付页面
+      router.push({ path: "/checkout/pay", query: { orderId: response.id } });
+   } catch (error) {
+      $?.proxy?.$msg({ type: "error", msg: "订单提交失败" });
+   }
+};
 </script>
 
 <template>
@@ -33,7 +69,7 @@ order_store.createOrder()
             <!-- 收货地址 -->
             <h3 class="box-title">收货地址</h3>
             <div class="box-body">
-               <ReceivingAddress />
+               <ReceivingAddress ref="receivingAddressInstance" />
             </div>
             <!-- 商品信息 -->
             <h3 class="box-title">商品信息</h3>
@@ -107,7 +143,7 @@ order_store.createOrder()
             </div>
             <!-- 提交订单 -->
             <div class="submit">
-               <XtxButton type="primary">提交订单</XtxButton>
+               <XtxButton type="primary" @click="submitOrder">提交订单</XtxButton>
             </div>
          </div>
       </div>

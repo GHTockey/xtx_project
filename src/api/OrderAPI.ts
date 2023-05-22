@@ -1,7 +1,7 @@
 import XtxRequestManager from "@/utils/request";
 
 import type { Response } from "@/types/Res";
-import type { Address, EditAdressObject, OrderOfCreateResponse } from "@/types/Order";
+import type { Address, EditAdressObject, OrderOfCreateResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 
 export class OrderAPI {
    /** 生成订单API */
@@ -33,4 +33,13 @@ export class OrderAPI {
             data: address,
          });
    };
+   /** 提交订单API */
+   static submitOrder(order: SubmitOrderObject) {
+      return XtxRequestManager.createInstance.request<
+         Response<SubmitOrderResponse>, SubmitOrderObject>({
+            url: "/member/order",
+            method: "post",
+            data: order,
+         });
+   }
 }

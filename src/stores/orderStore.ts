@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { OrderAPI } from "@/api/OrderAPI";
 
-import type { Address, EditAdressObject, OrderOfCreateResponse } from "@/types/Order";
+import type { Address, EditAdressObject, OrderOfCreateResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 import type { Status } from "@/types/Status";
 
 type State = {
@@ -26,6 +26,8 @@ type Actions = {
    getAddress(): Promise<void>;
    /** 修改收货地址Handler */
    updateAddress(address: EditAdressObject): Promise<string>;
+   /** 提交订单Handler */
+   submitOrder(order: SubmitOrderObject): Promise<SubmitOrderResponse>;
 };
 
 
@@ -88,6 +90,11 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          // 返回被修改的收货地址的 id
          return response.result.id;
       },
+      async submitOrder(order) {
+         let res = await OrderAPI.submitOrder(order);
+         // 返回服务端的响应状态
+         return res.result;
+      }
    },
    getters: {},
 })
