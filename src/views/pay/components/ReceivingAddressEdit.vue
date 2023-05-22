@@ -1,6 +1,6 @@
 <!-- src/views/pay/components/ReceivingAddressEdit.vue -->
 <script setup lang="ts">
-import { ref, getCurrentInstance, reactive } from 'vue';
+import { ref, getCurrentInstance, reactive, watch } from 'vue';
 import XtxDialog from "@/components/XtxDialog.vue";
 import XtxCity from "@/components/XtxCity.vue";
 import XtxButton from "@/components/XtxButton.vue";
@@ -9,8 +9,6 @@ import { useOrderStore } from '@/stores/orderStore';
 
 // 用于控制弹框的显示和隐藏
 const visible = ref(false);
-// 向外暴露用于控制弹框显示和隐藏的响应式状态
-defineExpose({ visible });
 
 import type { EditAdressObject } from "@/types/Order";
 // 表单初始值
@@ -47,10 +45,13 @@ async function onAddressEdit() {
    // 将布尔值重置为接口需要的0和1
    formValues.value.isDefault = formValues.value.isDefault ? 0 : 1;
    // console.log(formValues.value);
+   let id = '';
    try {
-      // 服务器端返回的收货地址 id
-      //  let id = await order_store.updateAddress(formValues.value);
-      let id = await order_store.addAddress(formValues.value);
+      if (flag.isAlter) { // 修改收货地址
+         id = await order_store.updateAddress(formValues.value);
+      } else { // 添加收货地址
+         id = await order_store.addAddress(formValues.value);
+      }
       // 更新收货地址列表
       await order_store.getAddress();
       // 消息提示
@@ -66,11 +67,23 @@ async function onAddressEdit() {
    }
    // 关闭弹框
    visible.value = false;
-}
+};
+
+// 向外暴露用于控制弹框显示和隐藏的响应式状态
+defineExpose({ visible, formValues, flag });
+// 监控弹框的启动和关闭
+watch(visible, () => {
+   // console.log(flag);
+   if (visible.value) {
+      // 通过检测表单对象中是否存在 id 属性, 判断当前是添加操作还是修改操作
+      flag.isAlter = typeof formValues.value.id !== "undefined";
+      flag.text = flag.isAlter ? "修改" : "添加";
+   }
+});
 </script>
 
 <template>
-   <XtxDialog v-model:visible="visible" title="添加收货地址">
+   <XtxDialog v-model:visible="visible" :title="`${flag.text}收货地址`">
       <template #body>
          <div class="address-edit">
             <div class="xtx-form">
@@ -89,12 +102,11 @@ async function onAddressEdit() {
                <div class="xtx-form-item">
                   <div class="label">地区：</div>
                   <div class="field">
-                     <XtxCity placeholder="请选择所在地区" v-model:full-location="(formValues.fullLocation as string)"
-                        @on-change="
-                           formValues.provinceCode = $event.provinceCode!,
-                           formValues.cityCode = $event.cityCode!,
-                           formValues.countyCode = $event.countyCode!
-                           "/>
+                     <XtxCity placeholder="请选择所在地区" v-model:full-location="(formValues.fullLocation as string)" @on-change="
+                        formValues.provinceCode = $event.provinceCode!,
+                        formValues.cityCode = $event.cityCode!,
+                        formValues.countyCode = $event.countyCode!
+                        " />
                   </div>
                </div>
                <div class="xtx-form-item">
@@ -128,7 +140,7 @@ async function onAddressEdit() {
          <XtxButton @click="visible = false" type="gray" style="margin-right: 20px">
             取消
          </XtxButton>
-         <XtxButton type="primary" @click="onAddressEdit">确认</XtxButton>
+         <XtxButton type="primary" @click="onAddressEdit">{{ flag.text }}</XtxButton>
       </template>
    </XtxDialog>
 </template>

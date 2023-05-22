@@ -10,11 +10,12 @@
             <li><span>联系方式：</span>{{ finalAddress.contact.replace(/(\d{3})\d{4}(\d{4})/, "$1****$3") }}</li>
             <li><span>收货地址：</span>{{ finalAddress.fullLocation }} {{ finalAddress.address }}</li>
          </ul>
-         <a href="javascript:">修改地址</a>
+         <a href="javascript:" @click="alterAddress" v-if="finalAddress">修改地址</a>
       </div>
       <div class="action">
-         <XtxButton class="btn" @click="addressSwitch.visible = true">切换地址</XtxButton>
-         <XtxButton class="btn" @click="addressEdit.visible = true">添加地址</XtxButton>
+         <XtxButton class="btn" @click="addressSwitch.visible = true">切换地址
+         </XtxButton>
+         <XtxButton class="btn" @click="ttt">添加地址</XtxButton>
       </div>
       <ReceivingAddressEdit ref="addressEdit" @address-added="onAddressEdited" />
       <ReceivingAddressSwitch ref="addressSwitch" @address-switched="highestPriority = $event"
@@ -40,10 +41,35 @@ order_store.getAddress();
 const highestPriority = ref<Address | undefined>();
 // 新增收货地址
 function onAddressEdited(id: string) {
+   console.log(id);
    highestPriority.value = order_store.address.result.find(
       (item) => item.id === id
    )
 };
+// 修改收货地址
+function alterAddress() {
+   addressEdit.value.formValues = {
+      ...finalAddress.value,
+      isDefault: finalAddress.value?.isDefault === 0 ? true : false,
+   };
+   addressEdit.value.visible = true;
+};
+function ttt() {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;
+   addressEdit.value.formValues = {
+      receiver: "",
+      contact: "",
+      provinceCode: "",
+      cityCode: "",
+      countyCode: "",
+      address: "",
+      postalCode: "",
+      addressTags: "",
+      isDefault: false,
+   };
+   addressEdit.value.formValues.id = undefined;
+}
 
 // 最终的组件中渲染的收货地址
 const finalAddress = computed(() => {
