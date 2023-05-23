@@ -1,7 +1,7 @@
 import XtxRequestManager from "@/utils/request";
 
 import type { Response } from "@/types/Res";
-import type { Address, EditAdressObject, OrderOfCreateResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
+import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 
 export class OrderAPI {
    /** 生成订单API */
@@ -41,5 +41,11 @@ export class OrderAPI {
             method: "post",
             data: order,
          });
+   };
+   /** 获取订单详情API */
+   static getOrderInfoById(id: string) {
+      return XtxRequestManager.createInstance.request<Response<OrderResponse>>({
+         url: `/member/order/${id}`,
+      });
    }
 }

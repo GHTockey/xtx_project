@@ -10,13 +10,13 @@
          <!-- 付款信息 -->
          <div class="pay-info">
             <span class="icon iconfont icon-queren2"></span>
-            <div class="tip">
+            <div class="tip" v-if="isActive">
                <p>订单提交成功！请尽快完成支付。</p>
-               <p>支付还剩 <span>24分59秒</span>, 超时后将取消订单</p>
+               <p>支付还剩 <span>{{ dayjs.unix(count).format('mm分ss秒') }}</span>, 超时后将取消订单</p>
             </div>
             <div class="amount">
                <span>应付总额：</span>
-               <span>¥5673.00</span>
+               <span>¥{{ order_store.orderInfo.result.payMoney.toFixed(2) }}</span>
             </div>
          </div>
          <!-- 付款方式 -->
@@ -43,6 +43,42 @@
 <script setup lang="ts">
 import XtxBread from "@/components/XtxBread.vue";
 import XtxBreadItem from "@/components/XtxBreadItem.vue";
+import { useOrderStore } from "@/stores/orderStore";
+import { useRoute, useRouter } from "vue-router";
+import useCountdown from "@/logics/useCountdown";
+import { watch } from "vue";
+import dayjs from "dayjs";
+
+const order_store = useOrderStore();
+const route = useRoute();
+const router = useRouter();
+order_store.getOrderInfoById(route.query.orderId as string);
+const { count, start, isActive } = useCountdown();
+
+// 监听订单详细信息的获取状态
+watch(
+   () => order_store.orderInfo.status,
+   (status) => {
+      // 如果订单详细信息获取成功
+      if (status === "success") {
+         // 获取订单状态
+         const orderState = order_store.orderInfo.result.orderState;
+         // 待支付
+         if (orderState === 1) {
+            // 获取倒计时时间
+            const countdown = order_store.orderInfo.result.countdown;
+            // 如果还可以倒计时
+            if (countdown > 0) {
+               // 开启倒计时
+               start(countdown);
+            }
+         } else if (orderState === 2) {
+            // 已支付
+            router.push("/member/order");
+         }
+      }
+   }
+);
 </script>
  
 <style scoped lang="less">
@@ -129,4 +165,5 @@ import XtxBreadItem from "@/components/XtxBreadItem.vue";
          background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg) no-repeat center / contain;
       }
    }
-}</style>
+}
+</style>

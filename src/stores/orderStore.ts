@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { OrderAPI } from "@/api/OrderAPI";
 
-import type { Address, EditAdressObject, OrderOfCreateResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
+import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 import type { Status } from "@/types/Status";
 
 type State = {
@@ -14,7 +14,12 @@ type State = {
    address: {
       result: Address[];
       status: Status;
-   }
+   };
+   // 订单详细信息
+   orderInfo: {
+      result: OrderResponse;
+      status: Status;
+   };
 };
 type Getters = {};
 type Actions = {
@@ -28,6 +33,8 @@ type Actions = {
    updateAddress(address: EditAdressObject): Promise<string>;
    /** 提交订单Handler */
    submitOrder(order: SubmitOrderObject): Promise<SubmitOrderResponse>;
+   /** 获取订单详细信息Handler */
+   getOrderInfoById(id: string): Promise<void>;
 };
 
 
@@ -37,7 +44,7 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          orderOfCreate: {
             result: {
                userAddresses: [], // 用户地址列表
-               goods: [], // 商品列表*
+               goods: [], // 商品列表
                summary: { // 订单总结
                   goodsCount: 0, // 商品总数
                   totalPrice: 0, // 商品总价
@@ -51,7 +58,38 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          address: {
             result: [],
             status: 'idle'
-         }
+         },
+         orderInfo: {
+            result: {
+               id: "",
+               createTime: "",
+               payType: 1,
+               orderState: 1,
+               payLatestTime: "",
+               countdown: 0,
+               postFee: 0,
+               payMoney: 0,
+               payChannel: 1,
+               payState: 0,
+               totalMoney: 0,
+               totalNum: 0,
+               deliveryTimeType: 1,
+               receiverContact: "",
+               receiverMobile: 0,
+               provinceCode: "",
+               cityCode: "",
+               countyCode: "",
+               receiverAddress: "",
+               payTime: "",
+               consignTime: "",
+               endTime: "",
+               closeTime: "",
+               evaluationTime: "",
+               arrivalEstimatedTime: "",
+               skus: [],
+            },
+            status: "idle",
+         },
       }
    },
    actions: {
@@ -94,6 +132,16 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          let res = await OrderAPI.submitOrder(order);
          // 返回服务端的响应状态
          return res.result;
+      },
+      async getOrderInfoById(id) {
+         this.orderInfo.status = "loading";
+         try {
+            const response = await OrderAPI.getOrderInfoById(id);
+            this.orderInfo.result = response.result;
+            this.orderInfo.status = "success";
+         } catch (error) {
+            this.orderInfo.status = "error";
+         }
       }
    },
    getters: {},
