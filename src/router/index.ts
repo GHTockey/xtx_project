@@ -19,6 +19,7 @@ const router = createRouter({
         { path: 'cart', name: '购物车', component: () => import('@/views/cart/CartPage.vue') },
         { path: 'checkout/order', name: '订单页', component: () => import('@/views/pay/CheckoutPage.vue') },
         { path: "checkout/pay", name: '支付结算页', component: () => import("@/views/pay/PayPage.vue") },
+        { path: 'pay/callback', name: '支付回调页', component: () => import('@/views/pay/PayResultPage.vue') },
       ]
     },
     { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },

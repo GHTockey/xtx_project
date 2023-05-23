@@ -25,7 +25,7 @@
             <div class="item">
                <p>支付平台</p>
                <a class="btn wx" href="javascript:"></a>
-               <a class="btn alipay" href="javascript:"></a>
+               <a class="btn alipay" :href="payUrl" @click="paying = true" target="_blank"></a>
             </div>
             <div class="item">
                <p>支付方式</p>
@@ -38,6 +38,20 @@
          </div>
       </div>
    </div>
+
+   <XtxDialog title="正在支付..." v-model:visible="paying">
+      <template #body>
+         <div class="pay-wait">
+            <img src="@/assets/images/load.gif" alt="" />
+            <div>
+               <p>如果支付成功：</p>
+               <RouterLink :to="`/member/order/${order_store.orderInfo.result.id}`">查看订单详情></RouterLink>
+               <p>如果支付失败：</p>
+               <RouterLink to="/">查看相关疑问></RouterLink>
+            </div>
+         </div>
+      </template>
+   </XtxDialog>
 </template>
 
 <script setup lang="ts">
@@ -46,8 +60,9 @@ import XtxBreadItem from "@/components/XtxBreadItem.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { useRoute, useRouter } from "vue-router";
 import useCountdown from "@/logics/useCountdown";
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import dayjs from "dayjs";
+import XtxDialog from "@/components/XtxDialog.vue";
 
 const order_store = useOrderStore();
 const route = useRoute();
@@ -79,6 +94,13 @@ watch(
       }
    }
 );
+
+import req from "@/utils/request";
+const redirect = encodeURIComponent('http://www.corho.com:8080/#/pay/callback');
+// 支付地址
+const payUrl = `${req.baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${redirect}`;
+// 支付等待标识
+const paying = ref(false);
 </script>
  
 <style scoped lang="less">
@@ -164,6 +186,20 @@ watch(
       &.wx {
          background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg) no-repeat center / contain;
       }
+   }
+}
+
+.pay-wait {
+   display: flex;
+   justify-content: space-around;
+
+   p {
+      margin-top: 30px;
+      font-size: 14px;
+   }
+
+   a {
+      color: @xtxColor;
    }
 }
 </style>
