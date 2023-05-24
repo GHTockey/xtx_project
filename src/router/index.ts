@@ -20,6 +20,12 @@ const router = createRouter({
         { path: 'checkout/order', name: '订单页', component: () => import('@/views/pay/CheckoutPage.vue') },
         { path: "checkout/pay", name: '支付结算页', component: () => import("@/views/pay/PayPage.vue") },
         { path: 'pay/callback', name: '支付回调页', component: () => import('@/views/pay/PayResultPage.vue') },
+        {
+          path: "member", name: '个人中心布局', component: () => import("@/components/XtxMemberLayout.vue"), redirect: '/member/home',
+          children: [
+            { path: 'home', name: '个人中心布局-右', component: () => import('@/views/member/home/MemberHomePage.vue') },
+          ]
+        },
       ]
     },
     { path: '/login', name: '登录页', component: () => import('@/views/login/LoginPage.vue') },

@@ -13,8 +13,7 @@
          <a href="javascript:" @click="alterAddress" v-if="finalAddress">修改地址</a>
       </div>
       <div class="action">
-         <XtxButton class="btn" @click="addressSwitch.visible = true">切换地址
-         </XtxButton>
+         <XtxButton class="btn" @click="addressSwitch.visible = true">切换地址</XtxButton>
          <XtxButton class="btn" @click="ttt">添加地址</XtxButton>
       </div>
       <ReceivingAddressEdit ref="addressEdit" @address-added="onAddressEdited" />
