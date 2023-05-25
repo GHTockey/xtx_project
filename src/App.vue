@@ -20,6 +20,9 @@
 // function ccc() {
 //   console.log('点了取消');
 // }
+
+// import axios from "axios";
+// axios.get("/test").then((response) => console.log(response.data));
 </script>
 
 <style scoped lang="less"></style>

@@ -7,12 +7,15 @@ import { join } from 'node:path'
 
 import vueDevtools from 'vite-plugin-vue-devtools';
 
+import requireTransform from "vite-plugin-require-transform";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     // vueJsx(),
-    vueDevtools()
+    vueDevtools(),
+    requireTransform({ fileRegex: /.ts$|.tsx$|.vue$/ }),
   ],
   resolve: {
     alias: {
