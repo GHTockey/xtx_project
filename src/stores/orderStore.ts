@@ -3,6 +3,7 @@ import { OrderAPI } from "@/api/OrderAPI";
 
 import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 import type { Status } from "@/types/Status";
+import type { Pagination } from "@/types/Home/Category";
 
 type State = {
    // 被创建的临时订单信息
@@ -20,6 +21,13 @@ type State = {
       result: OrderResponse;
       status: Status;
    };
+   // 我的订单列表
+   myOrderList: {
+      [orderStatus in 0 | 1 | 2 | 3 | 4 | 5 | 6]: {
+         result: Pagination<OrderResponse>;
+         status: Status;
+      }
+   };
 };
 type Getters = {};
 type Actions = {
@@ -35,6 +43,8 @@ type Actions = {
    submitOrder(order: SubmitOrderObject): Promise<SubmitOrderResponse>;
    /** 获取订单详细信息Handler */
    getOrderInfoById(id: string): Promise<void>;
+   /** 获取我的订单列表Handler */
+   getMyOrders(args: { page: number; pageSize: number; orderState: 0 | 1 | 2 | 3 | 4 | 5 | 6 }): Promise<void>
 };
 
 
@@ -90,6 +100,78 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
             },
             status: "idle",
          },
+         myOrderList: {
+            0: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            1: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            2: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            3: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            4: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            5: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+            6: {
+               result: {
+                  page: 0,
+                  pages: 0,
+                  pageSize: 0,
+                  counts: 0,
+                  items: [],
+               },
+               status: "idle",
+            },
+         },
       }
    },
    actions: {
@@ -142,7 +224,17 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          } catch (error) {
             this.orderInfo.status = "error";
          }
-      }
+      },
+      async getMyOrders(args) {
+         this.myOrderList[args.orderState].status = 'loading';
+         try {
+            let res = await OrderAPI.getMyOrders(args);
+            this.myOrderList[args.orderState].result = res.result;
+            this.myOrderList[args.orderState].status = 'success';
+         } catch (error) {
+            this.myOrderList[args.orderState].status = 'error';
+         }
+      },
    },
    getters: {},
 })
