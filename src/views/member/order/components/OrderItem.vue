@@ -4,14 +4,36 @@ import { orderStatus } from "@/contants/index";
 import XtxButton from "@/components/XtxButton.vue";
 import type { OrderResponse } from "@/types/Order";
 import useCountdown from "@/logics/useCountdown";
+import { useOrderStore } from "@/stores/orderStore";
+import { getCurrentInstance } from "vue";
+import Confirm from "@/components/library/Confirm";
+
+const order_store = useOrderStore();
+const $ = getCurrentInstance();
 const props = defineProps<{ item: OrderResponse }>();
 const emit = defineEmits<{
    // onCancelOrder: (id: string) => void;
    (e: 'onCancelOrder', id: string): void;
+   (e: 'removeOrderSuccess'): void; // 删除成功会触发此方法
 }>();
 const { start, count } = useCountdown();
-if (props.item.orderState === 1) {
-   start(props.item.countdown)
+if (props.item.orderState === 1) start(props.item.countdown);
+
+// 删除订单Handler
+async function removeOrder(id: string) {
+   try {
+      await Confirm({ 'content': '确定删除该订单?' })
+      try {
+         await order_store.removeOrder([id])
+         $?.proxy?.$msg({ 'type': 'success', 'msg': '删除成功' })
+         emit('removeOrderSuccess')
+      } catch (error) {
+         console.log(error);
+         $?.proxy?.$msg({ 'type': 'error', 'msg': '删除失败' })
+      }
+   } catch (error) {
+      $?.proxy?.$msg({ 'type': 'success', 'msg': '取消' })
+   }
 }
 </script>
 
@@ -25,7 +47,7 @@ if (props.item.orderState === 1) {
             <b>付款截止: {{ dayjs(count * 1000).format('mm分ss秒') }}</b>
             <!-- <b>付款截止: 28分32秒</b> -->
          </span>
-         <a href="javascript:" class="del">删除</a>
+         <a href="javascript:" class="del" @click="removeOrder(item.id)">删除</a>
       </div>
       <div class="body">
          <div class="column goods">
@@ -33,14 +55,14 @@ if (props.item.orderState === 1) {
                <li v-for="skus in item.skus" :key="skus.id">
                   <a class="image" href="javascript:">
                      <img :src="skus.image" />
-               </a>
-               <div class="info">
-                  <p class="name ellipsis-2">{{ skus.name }}</p>
-                  <p class="attr ellipsis">
-                     <span v-for="(pro, index) in skus.properties" :key="index">
-                        {{ pro.propertyMainName }}: {{ pro.propertyValueName }}
-                     </span>
-                  </p>
+                  </a>
+                  <div class="info">
+                     <p class="name ellipsis-2">{{ skus.name }}</p>
+                     <p class="attr ellipsis">
+                        <span v-for="(pro, index) in skus.properties" :key="index">
+                           {{ pro.propertyMainName }}: {{ pro.propertyValueName }}
+                        </span>
+                     </p>
                   </div>
                   <div class="price">¥{{ skus.realPay }}</div>
                   <div class="count">x{{ skus.quantity }}</div>

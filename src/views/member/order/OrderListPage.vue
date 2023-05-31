@@ -10,7 +10,8 @@
                      暂无数据
                   </div>
                   <OrderItem v-for="item in order_store.myOrderList[reqParams.orderState].result
-                     .items" :key="item.id" :item="item" @onCancelOrder="onCancelOrder" />
+                     .items" :key="item.id" :item="item" @onCancelOrder="onCancelOrder"
+                     @removeOrderSuccess="order_store.getMyOrders(reqParams)" />
                </div>
                <XtxPagination v-model:page="reqParams.page"
                   :pages="order_store.myOrderList[reqParams.orderState].result.pages"
@@ -19,7 +20,7 @@
          </XtxTabs>
       </div>
    </div>
-   <CancelOrder ref="cancelOrderInstance" />
+   <CancelOrder ref="cancelOrderInstance" @onCancelOrderSuccess="order_store.getMyOrders(reqParams)" />
 </template>
 
 <script setup lang="ts">
@@ -44,7 +45,7 @@ const reqParams = ref<{
 // 取消订单弹框实例对象
 const cancelOrderInstance = ref();
 // 当取消订单按钮被点击时
-function onCancelOrder(id:string) {
+function onCancelOrder(id: string) {
    // 显示弹框
    cancelOrderInstance.value.visible = true;
    cancelOrderInstance.value.orderId = id

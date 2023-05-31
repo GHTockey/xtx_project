@@ -69,5 +69,13 @@ export class OrderAPI {
             cancelReason,
          },
       });
+   };
+   /** 删除订单API */
+   static removeOrder(ids: string[]) {
+      return XtxRequestManager.createInstance.request<Response<null>>({
+         url: "/member/order",
+         method: "delete",
+         data: { ids }
+      });
    }
 }

@@ -48,6 +48,8 @@ type Actions = {
    getMyOrders(args: { page: number; pageSize: number; orderState: 0 | 1 | 2 | 3 | 4 | 5 | 6 }): Promise<void>;
    /** 取消订单Handler */
    cancelOrder(id: string, cancelReason: string): Promise<OrderResponse>;
+   /** 删除订单Handler */
+   removeOrder(ids: string[]): Promise<null>;
 };
 
 
@@ -243,7 +245,11 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
          const response = await OrderAPI.cancelOrder(id, cancelReason);
          // 返回响应
          return response.result;
-      }
+      },
+      async removeOrder(ids) {
+         let res = await OrderAPI.removeOrder(ids)
+         return res.result
+      },
    },
    getters: {},
 })
