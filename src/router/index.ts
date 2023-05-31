@@ -25,8 +25,8 @@ const router = createRouter({
           redirect: '/member/home',
           children: [
             { path: 'home', name: '个人中心布局-右', component: () => import('@/views/member/home/MemberHomePage.vue') },
-            { path: 'order', component: () => import('@/views/member/order/OrderListPage.vue') },
-            { path: 'order/:id', component: () => import('@/views/member/order/OrderDetailPage.vue') }
+            { path: 'order', name: '订单列表', component: () => import('@/views/member/order/OrderListPage.vue') },
+            { path: 'order/:id', name: '订单详情', component: () => import('@/views/member/order/OrderDetailPage.vue') }
           ]
         },
       ]

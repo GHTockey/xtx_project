@@ -85,9 +85,9 @@ async function removeOrder(id: string) {
          <div class="column action">
             <XtxButton type="primary" size="small" v-if="item.orderState == 1">立即付款</XtxButton>
             <XtxButton type="primary" size="small" v-if="item.orderState == 3">确认收货</XtxButton>
-            <p><a href="javascript:">查看详情</a></p>
+            <p><router-link :to="'order/' + item.id">查看详情</router-link></p>
             <p><a href="javascript:" v-if="item.orderState == 1" @click="emit('onCancelOrder', item.id)">取消订单</a></p>
-            <p><a href="javascript:" v-if="item.orderState == 4">再次购买</a></p>
+            <p><a href="javascript:" v-if="item.orderState != 1">再次购买</a></p>
             <p><a href="javascript:" v-if="item.orderState == 4">申请售后</a></p>
          </div>
       </div>
