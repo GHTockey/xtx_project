@@ -11,7 +11,8 @@
                   </div>
                   <OrderItem v-for="item in order_store.myOrderList[reqParams.orderState].result
                      .items" :key="item.id" :item="item" @onCancelOrder="onCancelOrder"
-                     @removeOrderSuccess="order_store.getMyOrders(reqParams)" />
+                     @removeOrderSuccess="order_store.getMyOrders(reqParams)"
+                     @confirm-receipt-goods-success="order_store.getMyOrders(reqParams)" />
                </div>
                <XtxPagination v-model:page="reqParams.page"
                   :pages="order_store.myOrderList[reqParams.orderState].result.pages"

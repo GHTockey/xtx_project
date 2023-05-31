@@ -50,6 +50,8 @@ type Actions = {
    cancelOrder(id: string, cancelReason: string): Promise<OrderResponse>;
    /** 删除订单Handler */
    removeOrder(ids: string[]): Promise<null>;
+   /** 确认收货Handler */
+   confirmReceiptGoods(id: string): Promise<OrderResponse>;
 };
 
 
@@ -249,6 +251,10 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
       async removeOrder(ids) {
          let res = await OrderAPI.removeOrder(ids)
          return res.result
+      },
+      async confirmReceiptGoods(id) {
+         let res = await OrderAPI.confirmReceiptGoods(id);
+         return res.result;
       },
    },
    getters: {},

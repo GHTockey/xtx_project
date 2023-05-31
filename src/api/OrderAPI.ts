@@ -77,5 +77,12 @@ export class OrderAPI {
          method: "delete",
          data: { ids }
       });
+   };
+   /** 确认收货API */
+   static confirmReceiptGoods(id: string) {
+      return XtxRequestManager.createInstance.request<Response<OrderResponse>>({
+         url: `/member/order/${id}/receipt`,
+         method: "put",
+      });
    }
 }

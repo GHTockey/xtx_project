@@ -15,6 +15,7 @@ const emit = defineEmits<{
    // onCancelOrder: (id: string) => void;
    (e: 'onCancelOrder', id: string): void;
    (e: 'removeOrderSuccess'): void; // 删除成功会触发此方法
+   (e: 'confirmReceiptGoodsSuccess'): void; // 收货成功会触发此方法
 }>();
 const { start, count } = useCountdown();
 if (props.item.orderState === 1) start(props.item.countdown);
@@ -34,6 +35,25 @@ async function removeOrder(id: string) {
    } catch (error) {
       $?.proxy?.$msg({ 'type': 'success', 'msg': '取消' })
    }
+};
+// 确认收货Handler
+async function confirmReceiptGoods(id: string) {
+   try {
+      // 和用户进行确认是否要确认收货
+      await Confirm({ content: "确定要进行收货吗" });
+      // 捕获请求错误
+      try {
+         // 发送请求 确认收货
+         await order_store.confirmReceiptGoods(id);
+         // 消息提示
+         $?.proxy?.$msg({ type: "success", msg: "确认收货成功" });
+         // 通知父组件 重新获取订单列表
+         emit("confirmReceiptGoodsSuccess");
+      } catch (error) {
+         // 消息提示
+         $?.proxy?.$msg({ type: "error", msg: "确认收货失败" });
+      }
+   } catch (error) { }
 }
 </script>
 
@@ -84,7 +104,8 @@ async function removeOrder(id: string) {
          </div>
          <div class="column action">
             <XtxButton type="primary" size="small" v-if="item.orderState == 1">立即付款</XtxButton>
-            <XtxButton type="primary" size="small" v-if="item.orderState == 3">确认收货</XtxButton>
+            <XtxButton type="primary" size="small" v-if="item.orderState == 3" @click="confirmReceiptGoods(item.id)">确认收货
+            </XtxButton>
             <p><router-link :to="'order/' + item.id">查看详情</router-link></p>
             <p><a href="javascript:" v-if="item.orderState == 1" @click="emit('onCancelOrder', item.id)">取消订单</a></p>
             <p><a href="javascript:" v-if="item.orderState != 1">再次购买</a></p>
