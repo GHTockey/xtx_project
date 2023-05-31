@@ -4,6 +4,7 @@ import { OrderAPI } from "@/api/OrderAPI";
 import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 import type { Status } from "@/types/Status";
 import type { Pagination } from "@/types/Home/Category";
+import type { S } from "msw/lib/glossary-de6278a9";
 
 type State = {
    // 被创建的临时订单信息
@@ -44,7 +45,9 @@ type Actions = {
    /** 获取订单详细信息Handler */
    getOrderInfoById(id: string): Promise<void>;
    /** 获取我的订单列表Handler */
-   getMyOrders(args: { page: number; pageSize: number; orderState: 0 | 1 | 2 | 3 | 4 | 5 | 6 }): Promise<void>
+   getMyOrders(args: { page: number; pageSize: number; orderState: 0 | 1 | 2 | 3 | 4 | 5 | 6 }): Promise<void>;
+   /** 取消订单Handler */
+   cancelOrder(id: string, cancelReason: string): Promise<OrderResponse>;
 };
 
 
@@ -235,6 +238,12 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
             this.myOrderList[args.orderState].status = 'error';
          }
       },
+      async cancelOrder(id, cancelReason) {
+         // 发送请求、取消订单
+         const response = await OrderAPI.cancelOrder(id, cancelReason);
+         // 返回响应
+         return response.result;
+      }
    },
    getters: {},
 })

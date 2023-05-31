@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { orderStatus } from "@/contants/index";
 import XtxButton from "@/components/XtxButton.vue";
 import type { OrderResponse } from "@/types/Order";
-defineProps<{ item: OrderResponse }>();
+import useCountdown from "@/logics/useCountdown";
+const props = defineProps<{ item: OrderResponse }>();
+const emit = defineEmits<{
+   // onCancelOrder: (id: string) => void;
+   (e: 'onCancelOrder', id: string): void;
+}>();
+const { start, count } = useCountdown();
+if (props.item.orderState === 1) {
+   start(props.item.countdown)
+}
 </script>
 
 <template>
@@ -12,7 +22,7 @@ defineProps<{ item: OrderResponse }>();
          <span>订单编号: {{ item.id }}</span>
          <span class="down-time" v-if="item.orderState == 1">
             <i class="iconfont icon-down-time"></i>
-            <b>付款截止: {{ item.countdown }}</b>
+            <b>付款截止: {{ dayjs(count * 1000).format('mm分ss秒') }}</b>
             <!-- <b>付款截止: 28分32秒</b> -->
          </span>
          <a href="javascript:" class="del">删除</a>
@@ -23,14 +33,14 @@ defineProps<{ item: OrderResponse }>();
                <li v-for="skus in item.skus" :key="skus.id">
                   <a class="image" href="javascript:">
                      <img :src="skus.image" />
-                  </a>
-                  <div class="info">
-                     <p class="name ellipsis-2">{{ skus.name }}</p>
-                     <p class="attr ellipsis">
-                        <span v-for="(pro, index) in skus.properties" :key="index">
-                           {{ pro.propertyMainName }}: {{ pro.propertyValueName }}
-                        </span>
-                     </p>
+               </a>
+               <div class="info">
+                  <p class="name ellipsis-2">{{ skus.name }}</p>
+                  <p class="attr ellipsis">
+                     <span v-for="(pro, index) in skus.properties" :key="index">
+                        {{ pro.propertyMainName }}: {{ pro.propertyValueName }}
+                     </span>
+                  </p>
                   </div>
                   <div class="price">¥{{ skus.realPay }}</div>
                   <div class="count">x{{ skus.quantity }}</div>
@@ -39,15 +49,6 @@ defineProps<{ item: OrderResponse }>();
          </div>
          <div class="column state">
             <p>
-               <!-- {{ item.orderState == 1 ? '待付款' : (
-                  item.orderState == 2 ? '待发货' : (
-                     item.orderState == 3 ? '待收货' : (
-                        item.orderState == 4 ? '已完成' : (
-                           item.orderState == 5 ? '已关闭' : '已取消'
-                        )
-                     )
-                  )
-               ) }} -->
                {{ orderStatus[item.orderState].label }}
             </p>
             <a href="javascript:" class="green" v-if="item.orderState == 3">查看物流</a>
@@ -60,12 +61,12 @@ defineProps<{ item: OrderResponse }>();
             <p>{{ item.payType == 1 ? '在线支付' : (item.payType == 2 ? '货到付款' : null) }}</p>
          </div>
          <div class="column action">
-            <XtxButton type="primary" size="small">立即付款</XtxButton>
-            <XtxButton type="primary" size="small">确认收货</XtxButton>
+            <XtxButton type="primary" size="small" v-if="item.orderState == 1">立即付款</XtxButton>
+            <XtxButton type="primary" size="small" v-if="item.orderState == 3">确认收货</XtxButton>
             <p><a href="javascript:">查看详情</a></p>
-            <p><a href="javascript:">取消订单</a></p>
-            <p><a href="javascript:">再次购买</a></p>
-            <p><a href="javascript:">申请售后</a></p>
+            <p><a href="javascript:" v-if="item.orderState == 1" @click="emit('onCancelOrder', item.id)">取消订单</a></p>
+            <p><a href="javascript:" v-if="item.orderState == 4">再次购买</a></p>
+            <p><a href="javascript:" v-if="item.orderState == 4">申请售后</a></p>
          </div>
       </div>
    </div>

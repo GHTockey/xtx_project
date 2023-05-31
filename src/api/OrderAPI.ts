@@ -59,5 +59,15 @@ export class OrderAPI {
          url: "/member/order",
          params: args,
       });
+   };
+   /** 取消订单API */
+   static cancelOrder(id: string, cancelReason: string) {
+      return XtxRequestManager.createInstance.request<Response<OrderResponse>>({
+         url: `/member/order/${id}/cancel`,
+         method: "put",
+         data: {
+            cancelReason,
+         },
+      });
    }
 }
