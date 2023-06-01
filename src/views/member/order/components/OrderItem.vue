@@ -16,6 +16,7 @@ const emit = defineEmits<{
    (e: 'onCancelOrder', id: string): void;
    (e: 'removeOrderSuccess'): void; // 删除成功会触发此方法
    (e: 'confirmReceiptGoodsSuccess'): void; // 收货成功会触发此方法
+   (e: 'viewLogistics', id: string): void
 }>();
 const { start, count } = useCountdown();
 if (props.item.orderState === 1) start(props.item.countdown);
@@ -54,7 +55,11 @@ async function confirmReceiptGoods(id: string) {
          $?.proxy?.$msg({ type: "error", msg: "确认收货失败" });
       }
    } catch (error) { }
-}
+};
+// 触发获取物流Handler
+async function viewLogistics(id: string) {
+   emit('viewLogistics', id)
+};
 </script>
 
 <template>
@@ -93,7 +98,7 @@ async function confirmReceiptGoods(id: string) {
             <p>
                {{ orderStatus[item.orderState].label }}
             </p>
-            <a href="javascript:" class="green" v-if="item.orderState == 3">查看物流</a>
+            <a href="javascript:" class="green" v-if="item.orderState == 3" @click="viewLogistics(item.id)">查看物流</a>
             <a href="javascript:" class="green" v-if="item.orderState == 4">评价商品</a>
             <a href="javascript:" class="green" v-if="item.orderState == 4">查看评价</a>
          </div>

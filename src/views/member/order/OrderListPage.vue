@@ -12,7 +12,7 @@
                   <OrderItem v-for="item in order_store.myOrderList[reqParams.orderState].result
                      .items" :key="item.id" :item="item" @onCancelOrder="onCancelOrder"
                      @removeOrderSuccess="order_store.getMyOrders(reqParams)"
-                     @confirm-receipt-goods-success="order_store.getMyOrders(reqParams)" />
+                     @confirm-receipt-goods-success="order_store.getMyOrders(reqParams)" @view-logistics="viewLogistics" />
                </div>
                <XtxPagination v-model:page="reqParams.page"
                   :pages="order_store.myOrderList[reqParams.orderState].result.pages"
@@ -22,9 +22,11 @@
       </div>
    </div>
    <CancelOrder ref="cancelOrderInstance" @onCancelOrderSuccess="order_store.getMyOrders(reqParams)" />
+   <OrderLogistics ref="orderLogisticsInstance" />
 </template>
 
 <script setup lang="ts">
+import OrderLogistics from "./components/OrderLogistics.vue";
 import CancelOrder from "./components/CancelOrder.vue";
 import OrderItem from "./components/OrderItem.vue";
 import XtxPagination from "@/components/XtxPagination.vue";
@@ -50,8 +52,16 @@ function onCancelOrder(id: string) {
    // 显示弹框
    cancelOrderInstance.value.visible = true;
    cancelOrderInstance.value.orderId = id
-
+};
+// 物流信息弹框实例对象
+const orderLogisticsInstance = ref();
+function viewLogistics(id: string) {
+   // 显示弹框
+   orderLogisticsInstance.value.visible = true;
+   // 发送请求 获取物流信息
+   order_store.viewLogistics(id);
 }
+
 // 当请求参数变化后重新获取订单列表
 watchEffect(() => order_store.getMyOrders(reqParams.value));
 </script>

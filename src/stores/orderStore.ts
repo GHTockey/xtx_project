@@ -1,10 +1,17 @@
 import { defineStore } from "pinia";
 import { OrderAPI } from "@/api/OrderAPI";
 
-import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
+import type {
+   Address,
+   EditAdressObject,
+   OrderOfCreateResponse,
+   OrderResponse,
+   SubmitOrderObject,
+   SubmitOrderResponse,
+   LogisticsResponse
+} from "@/types/Order";
 import type { Status } from "@/types/Status";
 import type { Pagination } from "@/types/Home/Category";
-import type { S } from "msw/lib/glossary-de6278a9";
 
 type State = {
    // 被创建的临时订单信息
@@ -29,6 +36,11 @@ type State = {
          status: Status;
       }
    };
+   // 物流信息
+   logistics: {
+      result: LogisticsResponse
+      status: Status
+   };
 };
 type Getters = {};
 type Actions = {
@@ -52,6 +64,8 @@ type Actions = {
    removeOrder(ids: string[]): Promise<null>;
    /** 确认收货Handler */
    confirmReceiptGoods(id: string): Promise<OrderResponse>;
+   /** 获取物流信息Handler */
+   viewLogistics(id: string): Promise<void>
 };
 
 
@@ -179,6 +193,19 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
                status: "idle",
             },
          },
+         logistics: {
+            result: {
+               count: 0,
+               picture: "",
+               company: {
+                  name: "",
+                  number: "",
+                  tel: "",
+               },
+               list: [],
+            },
+            status: 'idle'
+         }
       }
    },
    actions: {
@@ -255,6 +282,16 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
       async confirmReceiptGoods(id) {
          let res = await OrderAPI.confirmReceiptGoods(id);
          return res.result;
+      },
+      async viewLogistics(id) {
+         this.logistics.status = 'loading'
+         try {
+            let res = await OrderAPI.viewLogistics(id)
+            this.logistics.result = res.result
+            this.logistics.status = 'success'
+         } catch (error) {
+            this.logistics.status = 'error'
+         }
       },
    },
    getters: {},

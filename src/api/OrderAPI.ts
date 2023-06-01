@@ -1,7 +1,7 @@
 import XtxRequestManager from "@/utils/request";
 
 import type { Response } from "@/types/Res";
-import type { Address, EditAdressObject, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
+import type { Address, EditAdressObject, LogisticsResponse, OrderOfCreateResponse, OrderResponse, SubmitOrderObject, SubmitOrderResponse } from "@/types/Order";
 import type { Pagination } from "@/types/Home/Category";
 
 export class OrderAPI {
@@ -83,6 +83,12 @@ export class OrderAPI {
       return XtxRequestManager.createInstance.request<Response<OrderResponse>>({
          url: `/member/order/${id}/receipt`,
          method: "put",
+      });
+   };
+   /** 查看物流信息API */
+   static viewLogistics(id: string) {
+      return XtxRequestManager.createInstance.request<Response<LogisticsResponse>>({
+         url: `/member/order/${id}/logistics`,
       });
    }
 }
