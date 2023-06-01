@@ -12,6 +12,7 @@
          <XtxStepItem title="订单完成" :desc="order_store.orderInfo.result.evaluationTime"></XtxStepItem>
       </XtxSteps>
       <!-- 物流栏 -->
+      <DetailLogistics v-if="[3, 4, 5].includes(order_store.orderInfo.result.orderState)" />
       <!-- 订单商品信息 -->
    </div>
 </template>
@@ -22,6 +23,7 @@ import { useOrderStore } from "@/stores/orderStore";
 import { useRoute } from "vue-router";
 import { XtxSteps } from "@/components/XtxSteps";
 import { XtxStepItem } from "@/components/XtxStepItem";
+import DetailLogistics from "./components/DetailLogistics.vue";
 
 const route = useRoute();
 const order_store = useOrderStore();
