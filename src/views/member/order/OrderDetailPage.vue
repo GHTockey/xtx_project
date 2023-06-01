@@ -4,6 +4,13 @@
       <!-- 订单状态 -->
       <OrderStatus />
       <!-- 步骤条-->
+      <XtxSteps :active="order_store.orderInfo.result.orderState === 6 ? 1 : order_store.orderInfo.result.orderState">
+         <XtxStepItem title="提交订单" :desc="order_store.orderInfo.result.createTime"></XtxStepItem>
+         <XtxStepItem title="付款成功" :desc="order_store.orderInfo.result.payTime"></XtxStepItem>
+         <XtxStepItem title="商品发货" :desc="order_store.orderInfo.result.consignTime"></XtxStepItem>
+         <XtxStepItem title="确认收货" :desc="order_store.orderInfo.result.endTime"></XtxStepItem>
+         <XtxStepItem title="订单完成" :desc="order_store.orderInfo.result.evaluationTime"></XtxStepItem>
+      </XtxSteps>
       <!-- 物流栏 -->
       <!-- 订单商品信息 -->
    </div>
@@ -13,6 +20,8 @@
 import OrderStatus from "./components/OrderStatus.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { useRoute } from "vue-router";
+import { XtxSteps } from "@/components/XtxSteps";
+import { XtxStepItem } from "@/components/XtxStepItem";
 
 const route = useRoute();
 const order_store = useOrderStore();
