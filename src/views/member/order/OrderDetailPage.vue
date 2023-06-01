@@ -14,6 +14,7 @@
       <!-- 物流栏 -->
       <DetailLogistics v-if="[3, 4, 5].includes(order_store.orderInfo.result.orderState)" />
       <!-- 订单商品信息 -->
+      <DetailOrderGooods />
    </div>
 </template>
 
@@ -24,6 +25,7 @@ import { useRoute } from "vue-router";
 import { XtxSteps } from "@/components/XtxSteps";
 import { XtxStepItem } from "@/components/XtxStepItem";
 import DetailLogistics from "./components/DetailLogistics.vue";
+import DetailOrderGooods from "./components/DetailOrderGooods.vue";
 
 const route = useRoute();
 const order_store = useOrderStore();
