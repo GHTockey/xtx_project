@@ -26,7 +26,7 @@
          </template>
          <!-- 待收货 -->
          <template v-if="orderStore.orderInfo.result.orderState === 3">
-            <XtxButton type="primary" size="small">确认收货</XtxButton>
+            <XtxButton type="primary" size="small" @click="confirmReceipt(orderStore.orderInfo.result.id)">确认收货</XtxButton>
             <XtxButton type="plain" size="small">再次购买</XtxButton>
          </template>
          <!-- 待评价 -->
@@ -54,14 +54,30 @@ import CancelOrder from "./CancelOrder.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { orderStatus } from "@/contants";
+import { ref, getCurrentInstance } from "vue";
+import Confirm from "@/components/library/Confirm";
 
-import { ref } from "vue";
+const $ = getCurrentInstance();
 const orderStore = useOrderStore();
 const cancelOrderInstance = ref(); // 取消弹框实例
 // 取消订单Handler
 function cancelOrder(id: string) {
    cancelOrderInstance.value.visible = true; // 弹框
    cancelOrderInstance.value.orderId = id; // 存id
+};
+// 确认收货Handler
+async function confirmReceipt(id: string) {
+   try {
+      await Confirm({ 'content': '确认收货吗?' })
+      try {
+         await orderStore.confirmReceiptGoods(id)
+         $?.proxy?.$msg({ 'type': 'success', 'msg': '收货成功' })
+         orderStore.getOrderInfoById(id) // 重新获取数据
+      } catch (error) {
+         $?.proxy?.$msg({ 'type': 'warn', 'msg': '收货失败：' + error })
+      }
+   } catch (error) { // 取消
+   }
 };
 </script>
  
