@@ -65,7 +65,9 @@ type Actions = {
    /** 确认收货Handler */
    confirmReceiptGoods(id: string): Promise<OrderResponse>;
    /** 获取物流信息Handler */
-   viewLogistics(id: string): Promise<void>
+   viewLogistics(id: string): Promise<void>;
+   /** 再次购买Handler */
+   createOrderById(id: string): Promise<void>;
 };
 
 
@@ -291,6 +293,16 @@ export const useOrderStore = defineStore<string, State, Getters, Actions>('order
             this.logistics.status = 'success'
          } catch (error) {
             this.logistics.status = 'error'
+         }
+      },
+      async createOrderById(id) {
+         this.orderOfCreate.status = 'loading'
+         try {
+            let res = await OrderAPI.createOrderById(id)
+            this.orderOfCreate.result = res.result
+            this.orderOfCreate.status = 'success'
+         } catch (error) {
+            this.orderOfCreate.status = 'error'
          }
       },
    },

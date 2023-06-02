@@ -90,5 +90,11 @@ export class OrderAPI {
       return XtxRequestManager.createInstance.request<Response<LogisticsResponse>>({
          url: `/member/order/${id}/logistics`,
       });
+   };
+   /** 再次购买API */
+   static createOrderById(id: string) {
+      return XtxRequestManager.createInstance.request<Response<OrderOfCreateResponse>>({
+         url: `/member/order/repurchase/${id}`,
+      });
    }
 }

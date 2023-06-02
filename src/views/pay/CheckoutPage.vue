@@ -7,16 +7,24 @@ import XtxButton from "@/components/XtxButton.vue";
 import ReceivingAddress from "./components/ReceivingAddress.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { ref, getCurrentInstance } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cartStore";
 import type { SubmitOrderObject } from "@/types/Order";
 
 const order_store = useOrderStore();
-order_store.createOrder()
 const $ = getCurrentInstance();
 const receivingAddressInstance = ref(); // 收货地址组件实例对象
 const router = useRouter(); // 路由实例对象
 const cart_store = useCartStore();
+const route = useRoute();
+
+// 如果路由传入了ID则使用此ID创建订单
+if (route.params.id) {
+   order_store.createOrderById(route.params.id as string)
+} else {
+   // 否则使用购物车中的商品创建订单
+   order_store.createOrder()
+}
 
 // 提交订单
 async function submitOrder() {
