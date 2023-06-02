@@ -126,4 +126,5 @@ async function confirmReceipt(id: string) {
          margin-left: 20px;
       }
    }
-}</style>
+}
+</style>

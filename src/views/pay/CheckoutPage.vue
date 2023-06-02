@@ -19,8 +19,9 @@ const cart_store = useCartStore();
 const route = useRoute();
 
 // 如果路由传入了ID则使用此ID创建订单
-if (route.params.id) {
-   order_store.createOrderById(route.params.id as string)
+// console.log(route,route.query.id);
+if (route.query.id) {
+   order_store.createOrderById(route.query.id as string)
 } else {
    // 否则使用购物车中的商品创建订单
    order_store.createOrder()
@@ -36,10 +37,10 @@ async function submitOrder() {
          count: item.count,
       })),
       addressId: receivingAddressInstance.value.addressId(),      // 收货地址 id
-      deliveryTimeType: 1,    // 配送时间 1 不限
-      payType: 1,      // 支付方式 1 支付宝
-      payChannel: 1,      // 支付渠道 1 为在线支付
-      buyerMessage: "",      // 买家留言
+      deliveryTimeType: 1,  // 配送时间 1 不限
+      payType: 1,  // 支付方式 1 支付宝
+      payChannel: 1,  // 支付渠道 1 为在线支付
+      buyerMessage: "",  // 买家留言
    };
    // 判断用户是否选择了收货地址
    if (!order.addressId) return $?.proxy?.$msg({ type: "warn", msg: "请选择收货地址" });
