@@ -18,7 +18,7 @@
                   query: { orderId: orderStore.orderInfo.result.id },
                })
                " type="primary" size="small">立即付款</XtxButton>
-            <XtxButton type="gray" size="small">取消订单</XtxButton>
+            <XtxButton type="gray" size="small" @click="cancelOrder(orderStore.orderInfo.result.id)">取消订单</XtxButton>
          </template>
          <!-- 待发货 -->
          <template v-if="orderStore.orderInfo.result.orderState === 2">
@@ -44,14 +44,25 @@
          <!-- 已取消 -->
       </div>
    </div>
+   <CancelOrder ref="cancelOrderInstance" @on-cancel-order-success="
+      orderStore.getOrderInfoById(orderStore.orderInfo.result.id)
+      " />
 </template>
 
 <script setup lang="ts">
+import CancelOrder from "./CancelOrder.vue";
 import XtxButton from "@/components/XtxButton.vue";
 import { useOrderStore } from "@/stores/orderStore";
 import { orderStatus } from "@/contants";
 
+import { ref } from "vue";
 const orderStore = useOrderStore();
+const cancelOrderInstance = ref(); // 取消弹框实例
+// 取消订单Handler
+function cancelOrder(id: string) {
+   cancelOrderInstance.value.visible = true; // 弹框
+   cancelOrderInstance.value.orderId = id; // 存id
+};
 </script>
  
 <style scoped lang="less">
